@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>שיעור 17 — חזרה כללית</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f1117;--surface:#181c27;--surface2:#1e2333;--border:#2a3045;--accent:#7c5cfc;--text:#e8ecf4;--muted:#7a85a0;--success:#3ecf8e;--warn:#f7c94f;--code-bg:#141720}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;font-size:17px;line-height:1.8;min-height:100vh}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.course-label{font-size:12px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.sep{color:var(--border)}
+.lesson-label{font-size:14px;font-weight:500}
+.progress-pill{background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:4px 14px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.progress-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 6px var(--accent)}
+.hero{padding:4rem 2rem 2rem;max-width:760px;margin:0 auto}
+.lesson-num{font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.lesson-num::before{content:'';display:inline-block;width:24px;height:2px;background:var(--accent);border-radius:2px}
+.hero h1{font-size:clamp(28px,5vw,44px);font-weight:700;line-height:1.2;letter-spacing:-.02em;margin-bottom:1rem;background:linear-gradient(135deg,var(--text) 60%,var(--muted));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:16px;color:var(--muted);margin-bottom:2rem}
+.tags{display:flex;gap:8px;flex-wrap:wrap}
+.tag{font-size:12px;padding:4px 12px;border-radius:99px;border:1px solid var(--border);color:var(--muted)}
+.tag.purple{border-color:var(--accent);color:var(--accent)}
+.main{max-width:760px;margin:0 auto;padding:0 2rem 6rem}
+.divider{height:1px;background:var(--border);margin:2.5rem 0}
+.section-label{font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem}
+h2{font-size:22px;font-weight:700;margin-bottom:.75rem}
+p{color:#bfc8df;margin-bottom:1rem}
+.callout{background:var(--surface2);border:1px solid var(--border);border-right:3px solid var(--accent);border-radius:8px;padding:1rem 1.2rem;margin:1.5rem 0;font-size:15px;color:var(--text);line-height:1.7}
+.callout.success{border-right-color:var(--success)}
+.callout-title{font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4rem;color:var(--accent)}
+.callout.success .callout-title{color:var(--success)}
+.code-block{background:var(--code-bg);border:1px solid var(--border);border-radius:10px;margin:1.5rem 0;overflow:hidden}
+.code-header{background:var(--surface);border-bottom:1px solid var(--border);padding:.5rem 1rem;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot.r{background:#ff5f57}.dot.y{background:#febc2e}.dot.g{background:#28c840}
+pre{padding:1.2rem 1.4rem;font-family:'Fira Code',monospace;font-size:14px;line-height:1.8;overflow-x:auto}
+.kw{color:#c792ea}.fn{color:#82aaff}.str{color:#c3e88d}.cm{color:#546e7a;font-style:italic}.num-c{color:#f78c6c}.var{color:#e8ecf4}
+/* concept map */
+.concept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:1.5rem 0}
+.concept-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.9rem 1rem;text-align:center}
+.concept-icon{font-size:24px;margin-bottom:.4rem}
+.concept-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:.2rem}
+.concept-sum{font-size:12px;color:var(--muted);line-height:1.4}
+/* quiz */
+.quiz-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.quiz-label{font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:1rem}
+.quiz-q{margin-bottom:1.2rem}
+.quiz-q .qtext{font-size:15px;font-weight:500;color:var(--text);margin-bottom:.6rem}
+.quiz-options{display:flex;flex-direction:column;gap:6px}
+.quiz-opt{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.6rem 1rem;font-size:14px;cursor:pointer;transition:border-color .15s,background .15s;text-align:right}
+.quiz-opt:hover{border-color:var(--accent)}
+.quiz-opt.correct{background:#0e2018;border-color:var(--success);color:var(--success)}
+.quiz-opt.wrong{background:#2a1010;border-color:#f07070;color:#f07070}
+.quiz-opt.disabled{pointer-events:none;opacity:.6}
+.quiz-feedback{font-size:13px;margin-top:.5rem;min-height:18px}
+.quiz-score{background:var(--surface2);border:1px solid var(--accent);border-radius:8px;padding:.8rem 1rem;font-size:15px;font-weight:500;color:var(--accent);text-align:center;display:none;margin-top:1rem}
+.quiz-btn{background:var(--accent);color:#fff;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;padding:.6rem 1.3rem;border-radius:8px;border:none;cursor:pointer;margin-top:1rem}
+.quiz-btn:hover{opacity:.88}
+.nav-row{display:flex;justify-content:space-between;margin-top:3rem;gap:12px}
+.nav-btn{display:inline-flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'Heebo',sans-serif;font-size:14px;font-weight:500;padding:.6rem 1.3rem;border-radius:8px;text-decoration:none;transition:border-color .15s}
+.nav-btn:hover{border-color:var(--accent);color:var(--accent)}
+.nav-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.nav-btn.primary:hover{opacity:.88;color:#fff}
+.ai-section{margin-top:3rem;background:linear-gradient(135deg,#160e2a,#0f1117);border:1px solid #3a2060;border-radius:12px;padding:1.5rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+.ai-icon{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#4f8ef7);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.ai-text{flex:1;min-width:200px}
+.ai-text h3{font-size:16px;font-weight:700;margin-bottom:.25rem}
+.ai-text p{font-size:14px;color:var(--muted);margin:0}
+.ai-btn{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;padding:.6rem 1.3rem;border-radius:8px;text-decoration:none;white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-left"><span class="course-label">Python למתחילים</span><span class="sep">›</span><span class="lesson-label">שיעור 17 מתוך 20</span></div>
+  <div class="progress-pill"><div class="progress-dot"></div>שלב 3 — פרויקט</div>
+</div>
+<div class="hero">
+  <div class="lesson-num">שיעור 17</div>
+  <h1>חזרה כללית</h1>
+  <p class="hero-sub">לפני הפרויקט — נזכיר את כל מה שלמדנו ונבדוק שהכל ברור עם חידון אינטראקטיבי.</p>
+  <div class="tags"><span class="tag purple">שלב 3</span><span class="tag">15 דקות</span><span class="tag">חידון!</span></div>
+</div>
+<div class="main">
+  <div class="section-label">סיכום — כל מה שלמדנו</div>
+  <h2>16 שיעורים, 8 אבני בניין</h2>
+
+  <div class="concept-grid">
+    <div class="concept-card"><div class="concept-icon">📦</div><div class="concept-name">משתנים</div><div class="concept-sum">שמירת מידע. x = 5</div></div>
+    <div class="concept-card"><div class="concept-icon">🔤</div><div class="concept-name">Strings</div><div class="concept-sum">טקסט. "שלום", f-string</div></div>
+    <div class="concept-card"><div class="concept-icon">⌨️</div><div class="concept-name">input()</div><div class="concept-sum">קלט ממשתמש</div></div>
+    <div class="concept-card"><div class="concept-icon">🔀</div><div class="concept-name">תנאים</div><div class="concept-sum">if / elif / else</div></div>
+    <div class="concept-card"><div class="concept-icon">🔄</div><div class="concept-name">לולאות</div><div class="concept-sum">while / for</div></div>
+    <div class="concept-card"><div class="concept-icon">📋</div><div class="concept-name">Lists</div><div class="concept-sum">רשימות, append</div></div>
+    <div class="concept-card"><div class="concept-icon">⚙️</div><div class="concept-name">פונקציות</div><div class="concept-sum">def, return</div></div>
+    <div class="concept-card"><div class="concept-icon">📖</div><div class="concept-name">Dicts</div><div class="concept-sum">מפתח-ערך</div></div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span>כל הכלים ביחד — דוגמה אחת</span></div>
+    <pre><span class="cm"># משתנים + רשימה + לולאה + תנאי + פונקציה</span>
+<span class="kw">def</span> <span class="fn">analyze_grades</span>(<span class="var">grades</span>):
+    <span class="var">passing</span> = []
+    <span class="kw">for</span> <span class="var">g</span> <span class="kw">in</span> <span class="var">grades</span>:
+        <span class="kw">if</span> <span class="var">g</span> >= <span class="num-c">60</span>:
+            <span class="var">passing</span>.<span class="fn">append</span>(<span class="var">g</span>)
+    <span class="var">avg</span> = <span class="fn">sum</span>(<span class="var">passing</span>) / <span class="fn">len</span>(<span class="var">passing</span>) <span class="kw">if</span> <span class="var">passing</span> <span class="kw">else</span> <span class="num-c">0</span>
+    <span class="kw">return</span> {<span class="str">"עברו"</span>: <span class="fn">len</span>(<span class="var">passing</span>), <span class="str">"ממוצע"</span>: <span class="fn">round</span>(<span class="var">avg</span>, <span class="num-c">1</span>)}
+
+<span class="var">result</span> = <span class="fn">analyze_grades</span>([<span class="num-c">55</span>, <span class="num-c">82</span>, <span class="num-c">91</span>, <span class="num-c">47</span>, <span class="num-c">76</span>])
+<span class="fn">print</span>(<span class="var">result</span>)  <span class="cm"># {'עברו': 3, 'ממוצע': 83.0}</span></pre>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-label">חידון — בדוק את עצמך</div>
+  <h2>6 שאלות על כל מה שלמדנו</h2>
+
+  <div class="quiz-box">
+    <div class="quiz-label">לחץ על התשובה הנכונה</div>
+    <div id="quiz-container"></div>
+    <div class="quiz-score" id="quiz-score"></div>
+    <button class="quiz-btn" id="quiz-restart" onclick="initQuiz()" style="display:none">נסה שוב</button>
+  </div>
+
+  <div class="callout success">
+    <div class="callout-title">מוכן לפרויקט?</div>
+    אם ענית על רוב השאלות נכון — אתה מוכן. גם אם לא — זה בסדר. בשיעור הבא נתכנן ביחד את הפרויקט הראשון, שלב אחד בכל פעם.
+  </div>
+
+  <div class="ai-section">
+    <div class="ai-icon">🤖</div>
+    <div class="ai-text"><h3>יש נושא שלא היה ברור?</h3><p>שאל AI ותבקש ממנו להסביר מחדש — בדרך אחרת.</p></div>
+    <a class="ai-btn" href="https://claude.ai/new?q=אני+לומד+Python+ועשיתי+חזרה+כללית+על+כל+הנושאים.+יש+נושא+שאני+רוצה+להבין+טוב+יותר:" target="_blank">שאל AI ↗</a>
+  </div>
+  <div class="nav-row">
+    <a class="nav-btn" href="lesson-16.html">→ שיעור קודם</a>
+    <a class="nav-btn primary" href="lesson-18.html">שיעור הבא — תכנון הפרויקט ←</a>
+  </div>
+</div>
+<script>
+const questions=[
+  {q:'מה יציג הקוד: x = 3; x += 2; print(x)',opts:['3','2','5','6'],ans:2},
+  {q:'מה עושה len("Python")?',opts:['מדפיס Python','מחזיר 6','מחזיר True','שגיאה'],ans:1},
+  {q:'כמה פעמים תרוץ: for i in range(3): print(i)',opts:['2','3','4','0'],ans:1},
+  {q:'מה ההבדל בין = לבין ==?',opts:['אין הבדל','= שמירה, == השוואה','= השוואה, == שמירה','= ב-Python, == בג\'אווה'],ans:1},
+  {q:'מה יקרה: fruits = ["תפוח","בננה"]; print(fruits[-1])',opts:['שגיאה','תפוח','בננה','None'],ans:2},
+  {q:'מה מחזיר int("שלום")?',opts:['0','שלום','שגיאת ValueError','None'],ans:2},
+];
+let answered=0,correct=0;
+function initQuiz(){
+  answered=0;correct=0;
+  const c=document.getElementById('quiz-container');
+  c.innerHTML=questions.map((q,i)=>`
+    <div class="quiz-q" id="q${i}">
+      <div class="qtext">${i+1}. ${q.q}</div>
+      <div class="quiz-options">${q.opts.map((o,j)=>`<div class="quiz-opt" onclick="answer(${i},${j})">${o}</div>`).join('')}</div>
+      <div class="quiz-feedback" id="fb${i}"></div>
+    </div>`).join('');
+  document.getElementById('quiz-score').style.display='none';
+  document.getElementById('quiz-restart').style.display='none';
+}
+function answer(qi,oi){
+  const q=questions[qi];
+  const opts=document.querySelectorAll(`#q${qi} .quiz-opt`);
+  opts.forEach(o=>o.classList.add('disabled'));
+  opts[oi].classList.add(oi===q.ans?'correct':'wrong');
+  if(oi!==q.ans)opts[q.ans].classList.add('correct');
+  const fb=document.getElementById('fb'+qi);
+  fb.textContent=oi===q.ans?'✓ נכון!':'✗ לא נכון';
+  fb.style.color=oi===q.ans?'var(--success)':'#f07070';
+  if(oi===q.ans)correct++;
+  answered++;
+  if(answered===questions.length){
+    const s=document.getElementById('quiz-score');
+    s.style.display='block';
+    s.textContent=`סיימת! ${correct} מתוך ${questions.length} נכון ${correct>=4?'🎉':'💪'}`;
+    document.getElementById('quiz-restart').style.display='inline-flex';
+  }
+}
+initQuiz();
+</script>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>שיעור 20 — סיום ומה הלאה?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f1117;--surface:#181c27;--surface2:#1e2333;--border:#2a3045;--accent:#f7874f;--accent2:#7c5cfc;--text:#e8ecf4;--muted:#7a85a0;--success:#3ecf8e;--warn:#f7c94f;--blue:#4f8ef7;--code-bg:#141720}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;font-size:17px;line-height:1.8;min-height:100vh}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.course-label{font-size:12px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.sep{color:var(--border)}
+.lesson-label{font-size:14px;font-weight:500}
+.progress-pill{background:var(--surface2);border:1px solid var(--success);border-radius:99px;padding:4px 14px;font-size:12px;color:var(--success);display:flex;align-items:center;gap:8px}
+.progress-dot{width:8px;height:8px;border-radius:50%;background:var(--success);box-shadow:0 0 6px var(--success)}
+/* HERO — special */
+.hero{padding:4rem 2rem 3rem;max-width:760px;margin:0 auto;text-align:center}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#160e2a,#0e2018);border:1px solid #3a3060;border-radius:99px;padding:6px 16px;font-size:12px;font-weight:500;color:var(--success);margin-bottom:1.5rem;letter-spacing:.06em;text-transform:uppercase}
+.hero h1{font-size:clamp(32px,6vw,52px);font-weight:700;line-height:1.15;letter-spacing:-.03em;margin-bottom:1rem;background:linear-gradient(135deg,#fff 40%,var(--success));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:17px;color:var(--muted);max-width:520px;margin:0 auto 2rem}
+/* stats row */
+.stats-row{display:flex;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;max-width:480px;margin:0 auto 3rem}
+.stat{background:var(--surface);flex:1;padding:1rem .5rem;text-align:center}
+.stat-n{font-size:26px;font-weight:700;color:var(--text)}
+.stat-l{font-size:12px;color:var(--muted);margin-top:2px}
+.main{max-width:760px;margin:0 auto;padding:0 2rem 6rem}
+.divider{height:1px;background:var(--border);margin:2.5rem 0}
+.section-label{font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem}
+h2{font-size:22px;font-weight:700;margin-bottom:.75rem}
+p{color:#bfc8df;margin-bottom:1rem}
+.callout{background:var(--surface2);border:1px solid var(--border);border-right:3px solid var(--success);border-radius:8px;padding:1rem 1.2rem;margin:1.5rem 0;font-size:15px;color:var(--text);line-height:1.7}
+.callout-title{font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4rem;color:var(--success)}
+/* learned list */
+.learned-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;margin:1.5rem 0}
+.learned-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.7rem 1rem;display:flex;align-items:center;gap:10px;font-size:14px}
+.learned-check{color:var(--success);font-size:16px;flex-shrink:0}
+/* next paths */
+.path-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:1.5rem 0}
+.path-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.2rem;transition:border-color .18s}
+.path-card:hover{border-color:var(--border)}
+.path-icon{font-size:28px;margin-bottom:.6rem}
+.path-name{font-size:15px;font-weight:700;margin-bottom:.3rem}
+.path-desc{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:.6rem}
+.path-tag{font-size:11px;padding:2px 8px;border-radius:99px;font-weight:500;display:inline-block}
+.p-web{border-color:#4f8ef7}.p-web .path-name{color:#4f8ef7}.p-web .path-tag{background:#0e1a30;color:#4f8ef7;border:1px solid #1e3a5f}
+.p-data{border-color:var(--success)}.p-data .path-name{color:var(--success)}.p-data .path-tag{background:#0e2018;color:var(--success);border:1px solid #1a4030}
+.p-auto{border-color:var(--warn)}.p-auto .path-name{color:var(--warn)}.p-auto .path-tag{background:#1a1a0e;color:var(--warn);border:1px solid #3a3010}
+.p-git{border-color:var(--accent)}.p-git .path-name{color:var(--accent)}.p-git .path-tag{background:#2a1608;color:var(--accent);border:1px solid #5a3018}
+/* certificate */
+.cert-box{background:linear-gradient(135deg,#0e1a30,#160e2a);border:1px solid #3a3060;border-radius:16px;padding:2.5rem;text-align:center;margin:2rem 0;position:relative;overflow:hidden}
+.cert-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent2),var(--success),var(--blue))}
+.cert-title{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem}
+.cert-name-field{font-size:14px;color:var(--muted);margin-bottom:.5rem}
+.cert-input{background:transparent;border:none;border-bottom:1px solid var(--border);color:var(--text);font-family:'Heebo',sans-serif;font-size:22px;font-weight:700;text-align:center;width:260px;outline:none;padding:.3rem 0;margin-bottom:1rem}
+.cert-input::placeholder{color:var(--border);font-size:18px}
+.cert-body{font-size:15px;color:#bfc8df;line-height:1.8;margin-bottom:1rem}
+.cert-courses{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:1rem 0}
+.cert-chip{background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:3px 10px;font-size:11px;color:var(--muted)}
+.cert-btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--accent2),var(--blue));color:#fff;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;padding:.65rem 1.5rem;border-radius:8px;border:none;cursor:pointer;margin-top:.5rem}
+.cert-btn:hover{opacity:.88}
+/* final message */
+.final-msg{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0;text-align:center}
+.final-msg .emoji{font-size:40px;margin-bottom:.75rem}
+.final-msg h3{font-size:20px;font-weight:700;margin-bottom:.5rem}
+.final-msg p{font-size:15px;color:var(--muted);max-width:440px;margin:0 auto}
+.nav-row{display:flex;justify-content:center;margin-top:3rem;gap:12px;flex-wrap:wrap}
+.nav-btn{display:inline-flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'Heebo',sans-serif;font-size:14px;font-weight:500;padding:.65rem 1.4rem;border-radius:8px;text-decoration:none;transition:border-color .15s}
+.nav-btn:hover{border-color:var(--success);color:var(--success)}
+.nav-btn.home{background:var(--success);border-color:var(--success);color:#0a1a0a}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-left"><span class="course-label">Python למתחילים</span><span class="sep">›</span><span class="lesson-label">שיעור 20 מתוך 20</span></div>
+  <div class="progress-pill"><div class="progress-dot"></div>✓ הקורס הושלם!</div>
+</div>
+
+<div class="hero">
+  <div class="hero-badge">✓ הקורס הושלם</div>
+  <h1>כל הכבוד!</h1>
+  <p class="hero-sub">עברת 20 שיעורים, למדת Python מאפס, ובנית פרויקט שלם. זה לא מובן מאליו.</p>
+  <div class="stats-row">
+    <div class="stat"><div class="stat-n">20</div><div class="stat-l">שיעורים</div></div>
+    <div class="stat"><div class="stat-n">16</div><div class="stat-l">נושאים</div></div>
+    <div class="stat"><div class="stat-n">1</div><div class="stat-l">פרויקט</div></div>
+    <div class="stat"><div class="stat-n">∞</div><div class="stat-l">אפשרויות</div></div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="section-label">מה למדת</div>
+  <h2>16 כלים שיש לך עכשיו</h2>
+
+  <div class="learned-grid">
+    <div class="learned-item"><span class="learned-check">✓</span>מה זה מחשב ותוכנה</div>
+    <div class="learned-item"><span class="learned-check">✓</span>שפות תכנות ולמה Python</div>
+    <div class="learned-item"><span class="learned-check">✓</span>Google Colab — הסביבה</div>
+    <div class="learned-item"><span class="learned-check">✓</span>משתנים ומספרים</div>
+    <div class="learned-item"><span class="learned-check">✓</span>Strings ו-f-strings</div>
+    <div class="learned-item"><span class="learned-check">✓</span>input() — קלט ממשתמש</div>
+    <div class="learned-item"><span class="learned-check">✓</span>if / elif / else</div>
+    <div class="learned-item"><span class="learned-check">✓</span>and, or, not</div>
+    <div class="learned-item"><span class="learned-check">✓</span>לולאת while</div>
+    <div class="learned-item"><span class="learned-check">✓</span>לולאת for + range()</div>
+    <div class="learned-item"><span class="learned-check">✓</span>Lists — רשימות</div>
+    <div class="learned-item"><span class="learned-check">✓</span>def + return — פונקציות</div>
+    <div class="learned-item"><span class="learned-check">✓</span>Dicts — מילונים</div>
+    <div class="learned-item"><span class="learned-check">✓</span>try / except — שגיאות</div>
+    <div class="learned-item"><span class="learned-check">✓</span>קריאה וכתיבה לקבצים</div>
+    <div class="learned-item"><span class="learned-check">✓</span>random + פרויקט שלם</div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-label">מה הלאה?</div>
+  <h2>4 כיוונים אפשריים מכאן</h2>
+
+  <div class="path-grid">
+    <div class="path-card p-web">
+      <div class="path-icon">🌐</div>
+      <div class="path-name">פיתוח ווב</div>
+      <div class="path-desc">בניית אתרים ואפליקציות. HTML, CSS, JavaScript — ואחר כך Flask ב-Python.</div>
+      <span class="path-tag">מומלץ למתחילים</span>
+    </div>
+    <div class="path-card p-data">
+      <div class="path-icon">📊</div>
+      <div class="path-name">נתונים ו-AI</div>
+      <div class="path-desc">ניתוח נתונים עם pandas, גרפים עם matplotlib, ובינה מלאכותית עם scikit-learn.</div>
+      <span class="path-tag">Python מצוין לזה</span>
+    </div>
+    <div class="path-card p-auto">
+      <div class="path-icon">🤖</div>
+      <div class="path-name">אוטומציה</div>
+      <div class="path-desc">Python ממיר משימות ידניות לאוטומטיות — קבצים, אקסל, דואל, גרידת ווב.</div>
+      <span class="path-tag">מאוד שימושי</span>
+    </div>
+    <div class="path-card p-git">
+      <div class="path-icon">📦</div>
+      <div class="path-name">Git ו-GitHub</div>
+      <div class="path-desc">ניהול גרסאות קוד — חובה לכל מתכנת. git init, commit, push, pull.</div>
+      <span class="path-tag">הכרחי</span>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">הצעד הבא המוחשי</div>
+    בחר פרויקט קטן שמעניין אותך — ובנה אותו. כלום לא מלמד כמו לנסות לבנות משהו אמיתי ולהיתקל בבעיות אמיתיות. AI (כמו Claude) יעזור לך כשתיתקע.
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-label">תעודת סיום</div>
+  <h2>הכנס את שמך וצור תעודה</h2>
+
+  <div class="cert-box" id="cert-box">
+    <div class="cert-title">תעודת סיום קורס</div>
+    <div class="cert-name-field">שם הלומד</div>
+    <input class="cert-input" id="cert-name" placeholder="הכנס שמך כאן" oninput="updateCert()" />
+    <div class="cert-body" id="cert-body">
+      בזאת מאושר כי <strong id="cert-name-display" style="color:var(--success)">___</strong><br>
+      השלים בהצלחה את קורס Python למתחילים<br>
+      20 שיעורים · 4 שלבים · פרויקט עצמאי
+    </div>
+    <div class="cert-courses">
+      <span class="cert-chip">משתנים</span>
+      <span class="cert-chip">Strings</span>
+      <span class="cert-chip">תנאים</span>
+      <span class="cert-chip">לולאות</span>
+      <span class="cert-chip">Lists</span>
+      <span class="cert-chip">פונקציות</span>
+      <span class="cert-chip">Dicts</span>
+      <span class="cert-chip">Exceptions</span>
+      <span class="cert-chip">קבצים</span>
+      <span class="cert-chip">פרויקט עצמאי</span>
+    </div>
+    <button class="cert-btn" onclick="printCert()">🖨️ הדפס / שמור PDF</button>
+  </div>
+
+  <div class="final-msg">
+    <div class="emoji">🚀</div>
+    <h3>זה רק ההתחלה</h3>
+    <p>כל מתכנת בעולם התחיל בדיוק כמוך — משורה אחת של print(). מה שמפריד בין מתחיל למקצוען הוא רק זמן והמשך ניסיון. המשך הלאה.</p>
+  </div>
+
+  <div class="nav-row">
+    <a class="nav-btn" href="lesson-19.html">→ שיעור קודם</a>
+    <a class="nav-btn home" href="syllabus.html">חזור לסילבוס 🏠</a>
+  </div>
+</div>
+
+<script>
+function updateCert(){
+  const n=document.getElementById('cert-name').value||'___';
+  document.getElementById('cert-name-display').textContent=n;
+}
+function printCert(){
+  const n=document.getElementById('cert-name').value.trim()||'הלומד';
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html dir="rtl"><head><meta charset="UTF-8"><title>תעודת סיום</title>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>body{font-family:'Heebo',sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#f8f8f8}
+  .cert{background:#fff;border:3px solid #7c5cfc;border-radius:16px;padding:3rem;max-width:600px;width:90%;text-align:center;box-shadow:0 4px 40px rgba(0,0,0,.1)}
+  h1{font-size:36px;color:#7c5cfc;margin-bottom:.5rem}
+  .name{font-size:28px;font-weight:700;color:#333;margin:1.5rem 0;border-bottom:2px solid #3ecf8e;padding-bottom:.5rem}
+  p{color:#666;line-height:1.7}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:1rem 0}
+  .chip{background:#f0f0f0;border-radius:99px;padding:3px 10px;font-size:12px;color:#666}
+  .date{font-size:13px;color:#aaa;margin-top:1.5rem}</style></head><body>
+  <div class="cert"><h1>תעודת סיום</h1><p>בזאת מאושר כי</p>
+  <div class="name">${n}</div>
+  <p>השלים בהצלחה את קורס <strong>Python למתחילים</strong><br>20 שיעורים · 4 שלבים · פרויקט עצמאי</p>
+  <div class="chips"><span class="chip">משתנים</span><span class="chip">Strings</span><span class="chip">תנאים</span><span class="chip">לולאות</span><span class="chip">Lists</span><span class="chip">פונקציות</span><span class="chip">Dicts</span><span class="chip">Exceptions</span><span class="chip">קבצים</span><span class="chip">פרויקט עצמאי</span></div>
+  <div class="date">${new Date().toLocaleDateString('he-IL')}</div></div>
+  <script>window.onload=()=>window.print()<\/script></body></html>`);
+  w.document.close();
+}
+</script>
+</body>
+</html>
