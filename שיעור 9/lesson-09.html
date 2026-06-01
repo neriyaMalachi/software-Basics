@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>שיעור 9 — לולאת while</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f1117;--surface:#181c27;--surface2:#1e2333;--border:#2a3045;--accent:#4f8ef7;--text:#e8ecf4;--muted:#7a85a0;--success:#3ecf8e;--warn:#f7c94f;--danger:#f07070;--code-bg:#141720}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;font-size:17px;line-height:1.8;min-height:100vh}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.course-label{font-size:12px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.sep{color:var(--border)}
+.lesson-label{font-size:14px;font-weight:500}
+.progress-pill{background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:4px 14px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.progress-dot{width:8px;height:8px;border-radius:50%;background:#4f8ef7;box-shadow:0 0 6px #4f8ef7}
+.hero{padding:4rem 2rem 2rem;max-width:760px;margin:0 auto}
+.lesson-num{font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:#4f8ef7;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.lesson-num::before{content:'';display:inline-block;width:24px;height:2px;background:#4f8ef7;border-radius:2px}
+.hero h1{font-size:clamp(28px,5vw,44px);font-weight:700;line-height:1.2;letter-spacing:-.02em;margin-bottom:1rem;background:linear-gradient(135deg,var(--text) 60%,var(--muted));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:16px;color:var(--muted);margin-bottom:2rem}
+.tags{display:flex;gap:8px;flex-wrap:wrap}
+.tag{font-size:12px;padding:4px 12px;border-radius:99px;border:1px solid var(--border);color:var(--muted)}
+.tag.blue{border-color:#4f8ef7;color:#4f8ef7}
+.main{max-width:760px;margin:0 auto;padding:0 2rem 6rem}
+.divider{height:1px;background:var(--border);margin:2.5rem 0}
+.section-label{font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem}
+h2{font-size:22px;font-weight:700;margin-bottom:.75rem}
+p{color:#bfc8df;margin-bottom:1rem}
+.callout{background:var(--surface2);border:1px solid var(--border);border-right:3px solid #4f8ef7;border-radius:8px;padding:1rem 1.2rem;margin:1.5rem 0;font-size:15px;color:var(--text);line-height:1.7}
+.callout.success{border-right-color:var(--success)}
+.callout.warn{border-right-color:var(--warn)}
+.callout.danger{border-right-color:var(--danger)}
+.callout-title{font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4rem;color:#4f8ef7}
+.callout.success .callout-title{color:var(--success)}
+.callout.warn .callout-title{color:var(--warn)}
+.callout.danger .callout-title{color:var(--danger)}
+.code-block{background:var(--code-bg);border:1px solid var(--border);border-radius:10px;margin:1.5rem 0;overflow:hidden}
+.code-header{background:var(--surface);border-bottom:1px solid var(--border);padding:.5rem 1rem;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot.r{background:#ff5f57}.dot.y{background:#febc2e}.dot.g{background:#28c840}
+pre{padding:1.2rem 1.4rem;font-family:'Fira Code',monospace;font-size:14px;line-height:1.8;overflow-x:auto}
+.kw{color:#c792ea}.fn{color:#82aaff}.str{color:#c3e88d}.cm{color:#546e7a;font-style:italic}.num-c{color:#f78c6c}.var{color:#e8ecf4}
+
+/* animation loop */
+.loop-viz{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.loop-viz-label{font-size:12px;color:var(--muted);margin-bottom:1rem;letter-spacing:.06em;text-transform:uppercase}
+.loop-steps{display:flex;flex-direction:column;gap:0}
+.loop-step{display:flex;gap:12px;align-items:flex-start;padding:.6rem 0;border-bottom:1px solid var(--border)}
+.loop-step:last-child{border-bottom:none}
+.loop-iter{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px}
+.loop-iter.active{background:#0e1a30;border:1px solid #4f8ef7;color:#4f8ef7}
+.loop-iter.done{background:#0e2018;border:1px solid #1a4030;color:var(--success)}
+.loop-iter.stop{background:#2a1010;border:1px solid #5a2020;color:var(--danger)}
+.loop-body{flex:1}
+.loop-check{font-size:13px;color:var(--muted)}
+.loop-action{font-family:'Fira Code',monospace;font-size:13px;color:#c3e88d;margin-top:2px}
+
+/* interactive while sim */
+.sim-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.sim-label{font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.75rem}
+.sim-controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1rem}
+.sim-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'Heebo',sans-serif;font-size:13px;font-weight:500;padding:.5rem 1rem;border-radius:8px;cursor:pointer;transition:border-color .15s}
+.sim-btn:hover{border-color:#4f8ef7;color:#4f8ef7}
+.sim-btn.run{background:#4f8ef7;border-color:#4f8ef7;color:#fff}
+.sim-btn.run:hover{opacity:.88}
+.sim-state{display:flex;gap:12px;margin-bottom:.75rem;flex-wrap:wrap}
+.sim-var{background:var(--code-bg);border:1px solid var(--border);border-radius:6px;padding:.4rem .8rem;font-family:'Fira Code',monospace;font-size:14px}
+.sim-var .vname{color:var(--muted);font-size:12px}
+.sim-var .vval{color:#f78c6c;font-weight:500}
+.sim-output{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:.8rem 1rem;font-family:'Fira Code',monospace;font-size:13px;color:var(--success);min-height:60px;max-height:160px;overflow-y:auto;white-space:pre-wrap}
+
+.exercise-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-top:2rem}
+.exercise-header{display:flex;align-items:center;gap:10px;margin-bottom:1rem}
+.exercise-badge{background:#1a2a1a;border:1px solid #2d5a2d;color:var(--success);font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:99px}
+.exercise-title{font-size:18px;font-weight:700}
+.question{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.9rem 1.1rem;margin-bottom:.75rem;cursor:pointer;transition:border-color .2s}
+.question:hover{border-color:#4f8ef7}
+.question-text{color:var(--text);font-weight:500;font-size:15px;margin-bottom:.25rem}
+.answer{display:none;font-size:14px;color:var(--success);margin-top:.5rem;padding-top:.5rem;border-top:1px solid var(--border);line-height:1.6}
+.answer.show{display:block}
+.toggle-hint{font-size:12px;color:var(--muted);margin-top:4px}
+.ai-section{margin-top:3rem;background:linear-gradient(135deg,#0e1a30,#0f1117);border:1px solid #1e3a5f;border-radius:12px;padding:1.5rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+.ai-icon{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#4f8ef7,#7c5cfc);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.ai-text{flex:1;min-width:200px}
+.ai-text h3{font-size:16px;font-weight:700;margin-bottom:.25rem}
+.ai-text p{font-size:14px;color:var(--muted);margin:0}
+.ai-btn{display:inline-flex;align-items:center;gap:8px;background:#4f8ef7;color:#fff;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;padding:.6rem 1.3rem;border-radius:8px;text-decoration:none;white-space:nowrap}
+.ai-btn:hover{opacity:.88}
+.nav-row{display:flex;justify-content:space-between;margin-top:3rem;gap:12px}
+.nav-btn{display:inline-flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'Heebo',sans-serif;font-size:14px;font-weight:500;padding:.6rem 1.3rem;border-radius:8px;text-decoration:none;transition:border-color .15s}
+.nav-btn:hover{border-color:#4f8ef7;color:#4f8ef7}
+.nav-btn.primary{background:#4f8ef7;border-color:#4f8ef7;color:#fff}
+.nav-btn.primary:hover{opacity:.88;color:#fff}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="course-label">Python למתחילים</span>
+    <span class="sep">›</span>
+    <span class="lesson-label">שיעור 9 מתוך 20</span>
+  </div>
+  <div class="progress-pill"><div class="progress-dot"></div>שלב 1 — Python בסיסי</div>
+</div>
+
+<div class="hero">
+  <div class="lesson-num">שיעור 9</div>
+  <h1>לולאת while</h1>
+  <p class="hero-sub">מה אם צריך לעשות אותו דבר שוב ושוב, עד שמשהו משתנה? לזה יש לולאה.</p>
+  <div class="tags">
+    <span class="tag blue">Python</span>
+    <span class="tag">15 דקות</span>
+    <span class="tag">קוד ב-Colab</span>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="section-label">חלק א׳ — מה זה לולאה?</div>
+  <h2>לחזור על אותה פעולה — אוטומטית</h2>
+  <p>דמיין שצריך לספור מ-1 עד 10. בלי לולאה, היית צריך לכתוב 10 שורות print. עם לולאה — שורה אחת עושה הכל.</p>
+  <p>לולאת <code style="font-family:'Fira Code',monospace;color:#c792ea">while</code> אומרת: "כל עוד התנאי הזה נכון — המשך לחזור."</p>
+
+  <div class="loop-viz">
+    <div class="loop-viz-label">כך Python מריצה while x &lt; 4</div>
+    <div class="loop-steps">
+      <div class="loop-step">
+        <div class="loop-iter active">1</div>
+        <div class="loop-body">
+          <div class="loop-check">בדיקה: x &lt; 4? (x=1) → כן</div>
+          <div class="loop-action">print(x) → מדפיס 1 | x = x + 1 → x=2</div>
+        </div>
+      </div>
+      <div class="loop-step">
+        <div class="loop-iter active">2</div>
+        <div class="loop-body">
+          <div class="loop-check">בדיקה: x &lt; 4? (x=2) → כן</div>
+          <div class="loop-action">print(x) → מדפיס 2 | x = x + 1 → x=3</div>
+        </div>
+      </div>
+      <div class="loop-step">
+        <div class="loop-iter done">3</div>
+        <div class="loop-body">
+          <div class="loop-check">בדיקה: x &lt; 4? (x=3) → כן</div>
+          <div class="loop-action">print(x) → מדפיס 3 | x = x + 1 → x=4</div>
+        </div>
+      </div>
+      <div class="loop-step">
+        <div class="loop-iter stop">✕</div>
+        <div class="loop-body">
+          <div class="loop-check" style="color:var(--danger)">בדיקה: x &lt; 4? (x=4) → לא → עוצרים</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">חלק ב׳ — תחביר</div>
+  <h2>איך כותבים while</h2>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span>ספירה מ-1 עד 5</span></div>
+    <pre><span class="var">x</span> = <span class="num-c">1</span>
+
+<span class="kw">while</span> <span class="var">x</span> <= <span class="num-c">5</span>:
+    <span class="fn">print</span>(<span class="var">x</span>)
+    <span class="var">x</span> = <span class="var">x</span> + <span class="num-c">1</span>  <span class="cm"># חשוב! בלי זה — לולאה אינסופית</span>
+
+<span class="fn">print</span>(<span class="str">"סיימנו!"</span>)
+
+<span class="cm"># פלט: 1  2  3  4  5  סיימנו!</span></pre>
+  </div>
+
+  <div class="callout danger">
+    <div class="callout-title">סכנה — לולאה אינסופית!</div>
+    אם שוכחים לשנות את המשתנה שבתנאי — הלולאה רצה לנצח. המחשב לא יעצור לבד. ב-Colab: לחץ על ■ (Stop) כדי לעצור. תמיד בדוק: "האם x משתנה בכל סיבוב?"
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">חלק ג׳ — סימולציה חיה</div>
+  <h2>ראה את הלולאה רצה שלב אחר שלב</h2>
+
+  <div class="sim-box">
+    <div class="sim-label">סימולציה — while x &lt;= 5</div>
+    <div class="sim-state">
+      <div class="sim-var"><div class="vname">x</div><div class="vval" id="sim-x">1</div></div>
+      <div class="sim-var"><div class="vname">סטטוס</div><div class="vval" id="sim-status" style="color:var(--success)">רץ</div></div>
+    </div>
+    <div class="sim-controls">
+      <button class="sim-btn run" onclick="simStep()">צעד אחד ←</button>
+      <button class="sim-btn" onclick="simReset()">אתחל</button>
+    </div>
+    <div class="sim-output" id="sim-output">לחץ "צעד אחד" כדי להתחיל...</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">חלק ד׳ — דוגמאות שימושיות</div>
+  <h2>while בפעולה אמיתית</h2>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span>משחק ניחוש — while עד שמנחשים נכון</span></div>
+    <pre><span class="var">secret</span> = <span class="num-c">7</span>
+<span class="var">guess</span> = <span class="num-c">0</span>
+
+<span class="kw">while</span> <span class="var">guess</span> != <span class="var">secret</span>:
+    <span class="var">guess</span> = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"נחש מספר בין 1 ל-10: "</span>))
+    <span class="kw">if</span> <span class="var">guess</span> < <span class="var">secret</span>:
+        <span class="fn">print</span>(<span class="str">"גבוה יותר!"</span>)
+    <span class="kw">elif</span> <span class="var">guess</span> > <span class="var">secret</span>:
+        <span class="fn">print</span>(<span class="str">"נמוך יותר!"</span>)
+
+<span class="fn">print</span>(<span class="str">"כל הכבוד, ניחשת נכון!"</span>)</pre>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span>סכימת מספרים — while עם מצבר</span></div>
+    <pre><span class="var">total</span> = <span class="num-c">0</span>
+<span class="var">num</span> = <span class="num-c">1</span>
+
+<span class="kw">while</span> <span class="var">num</span> <= <span class="num-c">10</span>:
+    <span class="var">total</span> = <span class="var">total</span> + <span class="var">num</span>
+    <span class="var">num</span> += <span class="num-c">1</span>
+
+<span class="fn">print</span>(<span class="str">f"סכום 1 עד 10 = <span style='color:#f78c6c'>{total}</span>"</span>)
+<span class="cm"># פלט: סכום 1 עד 10 = 55</span></pre>
+  </div>
+
+  <div class="callout success">
+    <div class="callout-title">break — לעצור לולאה מבפנים</div>
+    לפעמים רוצים לעצור לפני שהתנאי הסתיים. המילה <code style="font-family:'Fira Code',monospace">break</code> עוצרת את הלולאה מיד:<br><br>
+    <code style="font-family:'Fira Code',monospace;color:#c3e88d">while True:</code><br>
+    <code style="font-family:'Fira Code',monospace;color:#c3e88d">&nbsp;&nbsp;&nbsp;&nbsp;name = input("שם: ")</code><br>
+    <code style="font-family:'Fira Code',monospace;color:#c3e88d">&nbsp;&nbsp;&nbsp;&nbsp;if name != "": break</code>
+  </div>
+
+  <div class="exercise-box">
+    <div class="exercise-header">
+      <span class="exercise-badge">תרגיל</span>
+      <span class="exercise-title">בדוק את עצמך</span>
+    </div>
+    <p style="font-size:15px;color:var(--muted);margin-bottom:1rem;">לחץ על כל שאלה לתשובה.</p>
+    <div class="question" onclick="toggleAnswer(this)">
+      <div class="question-text">1. מה חייב לקרות בתוך כל לולאת while כדי שלא תהיה אינסופית?</div>
+      <div class="toggle-hint">לחץ לתשובה</div>
+      <div class="answer">המשתנה שנמצא בתנאי חייב להשתנות בכל סיבוב — כדי שבשלב מסוים התנאי יהפוך ל-False והלולאה תעצור. אם x < 10 הוא התנאי, אז x חייב לגדול בכל סיבוב.</div>
+    </div>
+    <div class="question" onclick="toggleAnswer(this)">
+      <div class="question-text">2. כמה פעמים תרוץ הלולאה: x=1, while x &lt; 5: x += 1?</div>
+      <div class="toggle-hint">לחץ לתשובה</div>
+      <div class="answer">4 פעמים. x מתחיל ב-1 ומסתיים ב-4 (כשx=5 התנאי נכשל). הסיבובים: x=1, x=2, x=3, x=4 — ואז x=5 ועוצרים.</div>
+    </div>
+    <div class="question" onclick="toggleAnswer(this)">
+      <div class="question-text">3. מה עושה break?</div>
+      <div class="toggle-hint">לחץ לתשובה</div>
+      <div class="answer">break עוצר את הלולאה מיד — גם אם התנאי עדיין True. שימושי כשרוצים לצאת מלולאה לפי תנאי פנימי, בלי לחכות שהתנאי החיצוני ישתנה.</div>
+    </div>
+  </div>
+
+  <div class="ai-section">
+    <div class="ai-icon">🤖</div>
+    <div class="ai-text"><h3>לא הבנת משהו?</h3><p>שאל AI — הוא יסביר בדיוק מה שלא ברור.</p></div>
+    <a class="ai-btn" href="https://claude.ai/new?q=אני+לומד+Python+שיעור+9+על+לולאת+while.+יש+לי+שאלה:" target="_blank">שאל AI ↗</a>
+  </div>
+
+  <div class="nav-row">
+    <a class="nav-btn" href="lesson-08.html">→ שיעור קודם</a>
+    <a class="nav-btn primary" href="lesson-10.html">שיעור הבא — לולאת for ←</a>
+  </div>
+</div>
+
+<script>
+function toggleAnswer(el){const a=el.querySelector('.answer'),h=el.querySelector('.toggle-hint'),o=a.classList.contains('show');a.classList.toggle('show',!o);h.textContent=o?'לחץ לתשובה':'לחץ להסתרה'}
+
+let simX = 1;
+let simDone = false;
+const simOut = document.getElementById('sim-output');
+
+function simStep(){
+  if(simDone){simOut.textContent += '\n[הלולאה הסתיימה — לחץ אתחל]';return}
+  const xEl = document.getElementById('sim-x');
+  const stEl = document.getElementById('sim-status');
+  if(simX <= 5){
+    simOut.textContent += (simX===1?'':'') + `סיבוב ${simX}: בדיקה — ${simX} <= 5? כן → מדפיסים ${simX}, x = ${simX+1}\n`;
+    simX++;
+    xEl.textContent = simX;
+    if(simX > 5){
+      simDone = true;
+      stEl.textContent = 'עצר';
+      stEl.style.color = 'var(--danger)';
+      simOut.textContent += `בדיקה — ${simX} <= 5? לא → הלולאה נגמרה!\nסיימנו!`;
+    }
+  }
+}
+
+function simReset(){
+  simX = 1; simDone = false;
+  document.getElementById('sim-x').textContent = '1';
+  const st = document.getElementById('sim-status');
+  st.textContent = 'רץ'; st.style.color = 'var(--success)';
+  simOut.textContent = 'לחץ "צעד אחד" כדי להתחיל...';
+}
+</script>
+</body>
+</html>

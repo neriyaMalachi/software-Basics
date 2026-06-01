@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>שיעור 1 — מה זה מחשב ותוכנה?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #181c27;
+    --surface2: #1e2333;
+    --border: #2a3045;
+    --accent: #4f8ef7;
+    --accent2: #7c5cfc;
+    --text: #e8ecf4;
+    --muted: #7a85a0;
+    --success: #3ecf8e;
+    --warn: #f7c94f;
+    --code-bg: #141720;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Heebo', sans-serif;
+    font-size: 17px;
+    line-height: 1.8;
+    min-height: 100vh;
+  }
+
+  /* top bar */
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topbar-left { display: flex; align-items: center; gap: 12px; }
+  .course-label {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .sep { color: var(--border); }
+  .lesson-label { font-size: 14px; font-weight: 500; color: var(--text); }
+  .progress-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    padding: 4px 14px;
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .progress-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 6px var(--accent);
+  }
+
+  /* hero */
+  .hero {
+    padding: 4rem 2rem 2rem;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .lesson-num {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .lesson-num::before {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+  .hero h1 {
+    font-size: clamp(28px, 5vw, 44px);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -.02em;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--text) 60%, var(--muted));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-sub {
+    font-size: 16px;
+    color: var(--muted);
+    margin-bottom: 2rem;
+  }
+  .tags { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tag {
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 99px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+  .tag.accent { border-color: var(--accent); color: var(--accent); }
+
+  /* main */
+  .main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 2rem 6rem;
+  }
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 2.5rem 0;
+  }
+
+  /* section */
+  .section-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+  h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: .75rem;
+    letter-spacing: -.01em;
+  }
+  p { color: #bfc8df; margin-bottom: 1rem; }
+
+  /* callout */
+  .callout {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-right: 3px solid var(--accent);
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    margin: 1.5rem 0;
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+  .callout.success { border-right-color: var(--success); }
+  .callout.warn { border-right-color: var(--warn); }
+  .callout-title {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-bottom: .4rem;
+  }
+  .callout.success .callout-title { color: var(--success); }
+  .callout.warn .callout-title { color: var(--warn); }
+  .callout .callout-title { color: var(--accent); }
+
+  /* analogy card */
+  .analogy-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 1.5rem 0;
+  }
+  @media(max-width:520px){ .analogy-grid { grid-template-columns: 1fr; } }
+  .analogy-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.1rem 1.2rem;
+  }
+  .analogy-card .emoji { font-size: 28px; margin-bottom: .5rem; }
+  .analogy-card h3 { font-size: 15px; font-weight: 700; margin-bottom: .25rem; }
+  .analogy-card p { font-size: 14px; color: var(--muted); margin: 0; }
+
+  /* code block */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin: 1.5rem 0;
+    overflow: hidden;
+  }
+  .code-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: .5rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot.r { background: #ff5f57; }
+  .dot.y { background: #febc2e; }
+  .dot.g { background: #28c840; }
+  pre {
+    padding: 1.2rem 1.4rem;
+    font-family: 'Fira Code', monospace;
+    font-size: 14px;
+    line-height: 1.8;
+    overflow-x: auto;
+  }
+  .kw { color: #c792ea; }
+  .fn { color: #82aaff; }
+  .str { color: #c3e88d; }
+  .cm { color: #546e7a; font-style: italic; }
+  .num-c { color: #f78c6c; }
+
+  /* steps */
+  .steps { margin: 1.5rem 0; }
+  .step {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+    align-items: flex-start;
+  }
+  .step-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .step-body { flex: 1; }
+  .step-body strong { color: var(--text); font-weight: 500; }
+  .step-body p { font-size: 15px; color: #bfc8df; margin: .2rem 0 0; }
+
+  /* exercise */
+  .exercise-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+  }
+  .exercise-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+  }
+  .exercise-badge {
+    background: #1a2a1a;
+    border: 1px solid #2d5a2d;
+    color: var(--success);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 99px;
+  }
+  .exercise-title { font-size: 18px; font-weight: 700; }
+  .question {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: .9rem 1.1rem;
+    margin-bottom: .75rem;
+    font-size: 15px;
+    cursor: pointer;
+    transition: border-color .2s;
+    position: relative;
+  }
+  .question:hover { border-color: var(--accent); }
+  .question-text { color: var(--text); font-weight: 500; margin-bottom: .25rem; }
+  .answer {
+    display: none;
+    font-size: 14px;
+    color: var(--success);
+    margin-top: .5rem;
+    padding-top: .5rem;
+    border-top: 1px solid var(--border);
+    line-height: 1.6;
+  }
+  .answer.show { display: block; }
+  .toggle-hint {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* ai button */
+  .ai-section {
+    margin-top: 3rem;
+    background: linear-gradient(135deg, #0e1a30, #0f1117);
+    border: 1px solid #1e3a5f;
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .ai-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .ai-text { flex: 1; min-width: 200px; }
+  .ai-text h3 { font-size: 16px; font-weight: 700; margin-bottom: .25rem; }
+  .ai-text p { font-size: 14px; color: var(--muted); margin: 0; }
+  .ai-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent);
+    color: #fff;
+    font-family: 'Heebo', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    padding: .6rem 1.3rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity .15s, transform .1s;
+    white-space: nowrap;
+  }
+  .ai-btn:hover { opacity: .88; transform: translateY(-1px); }
+
+  /* nav */
+  .nav-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 3rem;
+  }
+  .nav-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Heebo', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    padding: .6rem 1.3rem;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color .15s;
+  }
+  .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* list */
+  ul.styled { padding-right: 1.2rem; margin: .75rem 0 1rem; }
+  ul.styled li { color: #bfc8df; font-size: 16px; margin-bottom: .4rem; }
+  ul.styled li::marker { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="course-label">Python למתחילים</span>
+    <span class="sep">›</span>
+    <span class="lesson-label">שיעור 1 מתוך 20</span>
+  </div>
+  <div class="progress-pill">
+    <div class="progress-dot"></div>
+    שלב 0 — יסודות
+  </div>
+</div>
+
+<div class="hero">
+  <div class="lesson-num">שיעור 1</div>
+  <h1>מה זה מחשב ותוכנה?</h1>
+  <p class="hero-sub">לפני שנתחיל לכתוב קוד — נבין מה בעצם אנחנו עושים.</p>
+  <div class="tags">
+    <span class="tag accent">קונצפטים</span>
+    <span class="tag">15 דקות</span>
+    <span class="tag">ללא קוד</span>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="section-label">חלק א׳ — המחשב</div>
+  <h2>מחשב = מכונה שמבצעת הוראות</h2>
+  <p>
+    המחשב הוא אחד הדברים החכמים ביותר שבני אדם המציאו — אבל מעניין שהוא בעצם די טיפש.
+    הוא לא מבין שום דבר בעצמו. הוא רק עושה בדיוק מה שאומרים לו.
+  </p>
+  <p>
+    חשוב על זה ככה: אם תבקש ממחשב לחשב 2+2 אבל לא תגיד לו איך — הוא לא יידע.
+    מישהו צריך לתת לו הוראות מפורטות. וזה בדיוק מה שתוכנה עושה.
+  </p>
+
+  <div class="callout">
+    <div class="callout-title">הגדרה פשוטה</div>
+    מחשב = חומרה (המכונה הפיזית) + תוכנה (ההוראות שמריצים עליה).
+    בלי תוכנה, מחשב הוא פשוט קופסת מתכת מאוד יקרה.
+  </div>
+
+  <div class="analogy-grid">
+    <div class="analogy-card">
+      <div class="emoji">🍳</div>
+      <h3>מתכון בישול</h3>
+      <p>כמו שף שמבצע מתכון שלב אחר שלב — המחשב מבצע הוראות שלב אחר שלב.</p>
+    </div>
+    <div class="analogy-card">
+      <div class="emoji">🎵</div>
+      <h3>נגן ותווים</h3>
+      <p>הנגן = המחשב. התווים = התוכנה. בלי תווים, הנגן לא יודע מה לנגן.</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">חלק ב׳ — תוכנה</div>
+  <h2>תוכנה = רשימת הוראות</h2>
+  <p>
+    כשאתה פותח את Chrome, WhatsApp, או Excel — אתה מריץ תוכנה.
+    התוכנה הזו נכתבה על ידי מתכנתים שאמרו למחשב בדיוק מה לעשות:
+    "הצג את כפתור ה-X כאן", "כשהמשתמש לוחץ — פתח חלון חדש", ועוד אלפי הוראות.
+  </p>
+
+  <div class="callout success">
+    <div class="callout-title">נקודה חשובה</div>
+    המחשב מבצע את ההוראות <strong>במהירות עצומה</strong> — מיליארדי פעולות בשנייה.
+    זו הסיבה שהוא שימושי. לא בגלל שהוא "חכם", אלא בגלל שהוא מהיר מאוד ולא טועה (אם ההוראות נכונות).
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">חלק ג׳ — חומרה מול תוכנה</div>
+  <h2>מה ההבדל בין חומרה לתוכנה?</h2>
+
+  <div class="analogy-grid">
+    <div class="analogy-card">
+      <div class="emoji">🖥️</div>
+      <h3>חומרה (Hardware)</h3>
+      <p>הדברים הפיזיים שאפשר לגעת בהם: מסך, מקלדת, זיכרון RAM, כרטיס מסך.</p>
+    </div>
+    <div class="analogy-card">
+      <div class="emoji">💾</div>
+      <h3>תוכנה (Software)</h3>
+      <p>הדברים שאי אפשר לגעת בהם: Windows, Chrome, Word, המשחק שאתה משחק.</p>
+    </div>
+  </div>
+
+  <p>
+    ביחד: החומרה היא הגוף, התוכנה היא הנשמה. אחד ללא השני — חסר.
+  </p>
+
+  <div class="divider"></div>
+
+  <div class="section-label">חלק ד׳ — מה אנחנו הולכים לעשות</div>
+  <h2>אתה תלמד לכתוב תוכנה</h2>
+  <p>
+    בקורס הזה תלמד לתת הוראות למחשב בשפה שנקראת <strong>Python</strong>.
+    Python היא שפת תכנות — שפה שגם בני אדם יכולים להבין וגם מחשבים יכולים לבצע.
+  </p>
+
+  <ul class="styled">
+    <li>תוכל לכתוב תוכניות שמחשבות דברים</li>
+    <li>תוכל לבנות תוכניות שמקבלות קלט ממשתמשים</li>
+    <li>תוכל להבין איך אפליקציות בנויות</li>
+    <li>תוכל לאוטומט משימות מייגעות</li>
+  </ul>
+
+  <div class="callout warn">
+    <div class="callout-title">ציפיות ריאליות</div>
+    לא תהפוך למתכנת מקצועי תוך 20 ימים. אבל תקבל הבנה אמיתית של איך תכנות עובד,
+    ובסיס מוצק שממנו אפשר להמשיך לגדול.
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- EXERCISE -->
+  <div class="exercise-box">
+    <div class="exercise-header">
+      <span class="exercise-badge">תרגיל</span>
+      <span class="exercise-title">בדוק את עצמך</span>
+    </div>
+    <p style="font-size:15px;color:var(--muted);margin-bottom:1rem;">לחץ על כל שאלה כדי לראות את התשובה.</p>
+
+    <div class="question" onclick="toggleAnswer(this)">
+      <div class="question-text">1. מה ההבדל בין חומרה לתוכנה?</div>
+      <div class="toggle-hint">לחץ לתשובה</div>
+      <div class="answer">חומרה = הדברים הפיזיים (מסך, מקלדת, מעבד). תוכנה = ההוראות שרצות על החומרה (Chrome, Windows, Python). חומרה אפשר לגעת — תוכנה לא.</div>
+    </div>
+
+    <div class="question" onclick="toggleAnswer(this)">
+      <div class="question-text">2. אם מחשב כל כך חכם, למה הוא צריך הוראות מפורטות?</div>
+      <div class="toggle-hint">לחץ לתשובה</div>
+      <div class="answer">כי מחשב לא חכם — הוא מהיר. הוא לא מבין כלום בעצמו, הוא רק מבצע בדיוק את מה שנאמר לו. החוכמה נמצאת אצל המתכנת שכותב את ההוראות.</div>
+    </div>
+
+    <div class="question" onclick="toggleAnswer(this)">
+      <div class="question-text">3. תן דוגמה אחת לחומרה ואחת לתוכנה מחיי היום יום שלך.</div>
+      <div class="toggle-hint">לחץ לתשובה</div>
+      <div class="answer">חומרה: הטלפון הנייד שלך, האוזניות, המדפסת. תוכנה: WhatsApp, Waze, YouTube, Spotify. כל אפליקציה שמשתמשים בה היא תוכנה.</div>
+    </div>
+  </div>
+
+  <!-- AI HELP -->
+  <div class="ai-section">
+    <div class="ai-icon">🤖</div>
+    <div class="ai-text">
+      <h3>לא הבנת משהו?</h3>
+      <p>שאל AI — הוא יסביר לך בדיוק מה שלא ברור, בשפה פשוטה.</p>
+    </div>
+    <a class="ai-btn" href="https://claude.ai/new?q=אני+לומד+תכנות+Python+ואני+בשיעור+1+על+מה+זה+מחשב+ותוכנה.+יש+לי+שאלה:" target="_blank">
+      שאל AI ↗
+    </a>
+  </div>
+
+  <!-- NAV -->
+  <div class="nav-row">
+    <a class="nav-btn" href="lesson-02.html">
+      שיעור הבא — מה זה שפת תכנות? ←
+    </a>
+  </div>
+
+</div>
+
+<script>
+function toggleAnswer(el) {
+  const answer = el.querySelector('.answer');
+  const hint = el.querySelector('.toggle-hint');
+  const isOpen = answer.classList.contains('show');
+  answer.classList.toggle('show', !isOpen);
+  hint.textContent = isOpen ? 'לחץ לתשובה' : 'לחץ להסתרה';
+}
+</script>
+</body>
+</html>

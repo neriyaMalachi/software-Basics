@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>שיעור 6 — קלט מהמשתמש</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f1117;--surface:#181c27;--surface2:#1e2333;--border:#2a3045;--accent:#4f8ef7;--text:#e8ecf4;--muted:#7a85a0;--success:#3ecf8e;--warn:#f7c94f;--code-bg:#141720}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;font-size:17px;line-height:1.8;min-height:100vh}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.course-label{font-size:12px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.sep{color:var(--border)}
+.lesson-label{font-size:14px;font-weight:500}
+.progress-pill{background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:4px 14px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.progress-dot{width:8px;height:8px;border-radius:50%;background:#4f8ef7;box-shadow:0 0 6px #4f8ef7}
+.hero{padding:4rem 2rem 2rem;max-width:760px;margin:0 auto}
+.lesson-num{font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:#4f8ef7;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.lesson-num::before{content:'';display:inline-block;width:24px;height:2px;background:#4f8ef7;border-radius:2px}
+.hero h1{font-size:clamp(28px,5vw,44px);font-weight:700;line-height:1.2;letter-spacing:-.02em;margin-bottom:1rem;background:linear-gradient(135deg,var(--text) 60%,var(--muted));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:16px;color:var(--muted);margin-bottom:2rem}
+.tags{display:flex;gap:8px;flex-wrap:wrap}
+.tag{font-size:12px;padding:4px 12px;border-radius:99px;border:1px solid var(--border);color:var(--muted)}
+.tag.blue{border-color:#4f8ef7;color:#4f8ef7}
+.tag.green{border-color:var(--success);color:var(--success)}
+.main{max-width:760px;margin:0 auto;padding:0 2rem 6rem}
+.divider{height:1px;background:var(--border);margin:2.5rem 0}
+.section-label{font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem}
+h2{font-size:22px;font-weight:700;margin-bottom:.75rem}
+p{color:#bfc8df;margin-bottom:1rem}
+.callout{background:var(--surface2);border:1px solid var(--border);border-right:3px solid #4f8ef7;border-radius:8px;padding:1rem 1.2rem;margin:1.5rem 0;font-size:15px;color:var(--text);line-height:1.7}
+.callout.success{border-right-color:var(--success)}
+.callout.warn{border-right-color:var(--warn)}
+.callout-title{font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4rem;color:#4f8ef7}
+.callout.success .callout-title{color:var(--success)}
+.callout.warn .callout-title{color:var(--warn)}
+.code-block{background:var(--code-bg);border:1px solid var(--border);border-radius:10px;margin:1.5rem 0;overflow:hidden}
+.code-header{background:var(--surface);border-bottom:1px solid var(--border);padding:.5rem 1rem;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot.r{background:#ff5f57}.dot.y{background:#febc2e}.dot.g{background:#28c840}
+pre{padding:1.2rem 1.4rem;font-family:'Fira Code',monospace;font-size:14px;line-height:1.8;overflow-x:auto}
+.kw{color:#c792ea}.fn{color:#82aaff}.str{color:#c3e88d}.cm{color:#546e7a;font-style:italic}.num-c{color:#f78c6c}.var{color:#e8ecf4}
+/* flow diagram */
+.flow{display:flex;align-items:center;gap:0;margin:1.5rem 0;flex-wrap:wrap;gap:8px}
+.flow-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.7rem 1rem;font-size:14px;text-align:center;flex:1;min-width:120px}
+.flow-box .icon{font-size:22px;margin-bottom:.3rem}
+.flow-box .label{color:var(--muted);font-size:12px}
+.flow-box .val{color:var(--text);font-weight:500}
+.flow-arrow{color:var(--muted);font-size:20px;flex-shrink:0}
+/* interactive demo */
+.demo-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.demo-label{font-size:12px;color:var(--muted);margin-bottom:.75rem;letter-spacing:.06em;text-transform:uppercase}
+.demo-input-row{display:flex;gap:10px;align-items:center;margin-bottom:1rem;flex-wrap:wrap}
+.demo-input{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.6rem 1rem;font-family:'Heebo',sans-serif;font-size:15px;color:var(--text);flex:1;min-width:160px;outline:none}
+.demo-input:focus{border-color:#4f8ef7}
+.demo-run{background:#4f8ef7;color:#fff;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;padding:.6rem 1.2rem;border-radius:8px;border:none;cursor:pointer}
+.demo-run:hover{opacity:.88}
+.demo-output{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:.8rem 1rem;font-family:'Fira Code',monospace;font-size:14px;color:var(--success);min-height:40px}
+.exercise-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-top:2rem}
+.exercise-header{display:flex;align-items:center;gap:10px;margin-bottom:1rem}
+.exercise-badge{background:#1a2a1a;border:1px solid #2d5a2d;color:var(--success);font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:99px}
+.exercise-title{font-size:18px;font-weight:700}
+.question{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.9rem 1.1rem;margin-bottom:.75rem;cursor:pointer;transition:border-color .2s}
+.question:hover{border-color:#4f8ef7}
+.question-text{color:var(--text);font-weight:500;font-size:15px;margin-bottom:.25rem}
+.answer{display:none;font-size:14px;color:var(--success);margin-top:.5rem;padding-top:.5rem;border-top:1px solid var(--border);line-height:1.6}
+.answer.show{display:block}
+.toggle-hint{font-size:12px;color:var(--muted);margin-top:4px}
+.ai-section{margin-top:3rem;background:linear-gradient(135deg,#0e1a30,#0f1117);border:1px solid #1e3a5f;border-radius:12px;padding:1.5rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+.ai-icon{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#4f8ef7,#7c5cfc);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.ai-text{flex:1;min-width:200px}
+.ai-text h3{font-size:16px;font-weight:700;margin-bottom:.25rem}
+.ai-text p{font-size:14px;color:var(--muted);margin:0}
+.ai-btn{display:inline-flex;align-items:center;gap:8px;background:#4f8ef7;color:#fff;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;padding:.6rem 1.3rem;border-radius:8px;text-decoration:none;white-space:nowrap}
+.ai-btn:hover{opacity:.88}
+.nav-row{display:flex;justify-content:space-between;margin-top:3rem;gap:12px}
+.nav-btn{display:inline-flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'Heebo',sans-serif;font-size:14px;font-weight:500;padding:.6rem 1.3rem;border-radius:8px;text-decoration:none;transition:border-color .15s}
+.nav-btn:hover{border-color:#4f8ef7;color:#4f8ef7}
+.nav-btn.primary{background:#4f8ef7;border-color:#4f8ef7;color:#fff}
+.nav-btn.primary:hover{opacity:.88;color:#fff}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="course-label">Python למתחילים</span>
+    <span class="sep">›</span>
+    <span class="lesson-label">שיעור 6 מתוך 20</span>
+  </div>
+  <div class="progress-pill"><div class="progress-dot"></div>שלב 1 — Python בסיסי</div>
+</div>
+
+<div class="hero">
+  <div class="lesson-num">שיעור 6</div>
+  <h1>קלט מהמשתמש — input()</h1>
+  <p class="hero-sub">עד עכשיו התוכנות שלנו עשו אותו דבר בכל פעם. עכשיו הן מתחילות להקשיב.</p>
+  <div class="tags">
+    <span class="tag blue">Python</span>
+    <span class="tag green">אינטראקטיבי!</span>
+    <span class="tag">15 דקות</span>
+  </div>
+</div>
+
+<div class="main">
+  <div class="section-label">חלק א׳ — מה זה קלט?</div>
+  <h2>תוכנה שמקשיבה למשתמש</h2>
+  <p>כל האפליקציות שאתה מכיר — WhatsApp, Google, Waze — מקבלות קלט ממך: אתה מקליד, מחפש, לוחץ. התוכנה מגיבה.</p>
+  <p>עד עכשיו הקוד שלנו עשה אותו דבר בכל הרצה. עם <code style="font-family:'Fira Code',monospace;color:#82aaff">input()</code> אנחנו נותנים למשתמש להשפיע על מה שקורה.</p>
+
+  <div class="flow">
+    <div class="flow-box"><div class="icon">👤</div><div class="label">משתמש</div><div class="val">מקליד משהו</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box"><div class="icon">💻</div><div class="label">input()</div><div class="val">מקבל את הקלט</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box"><div class="icon">📦</div><div class="label">משתנה</div><div class="val">שומר אותו</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box"><div class="icon">🖥️</div><div class="label">print()</div><div class="val">מציג תוצאה</div></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">חלק ב׳ — איך משתמשים ב-input()</div>
+  <h2>תוכנית ברכה פשוטה</h2>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span>תוכנית ברכה — הרץ ב-Colab</span></div>
+    <pre><span class="var">name</span> = <span class="fn">input</span>(<span class="str">"מה שמך? "</span>)
+<span class="fn">print</span>(<span class="str">f"שלום, <span style="color:#f78c6c">{name}</span>! ברוך הבא."</span>)</pre>
+  </div>
+
+  <p>כשתריץ את זה, Python תעצור ותחכה שתקליד. אחרי Enter — היא תמשיך עם מה שהקלדת.</p>
+
+  <div class="demo-box">
+    <div class="demo-label">נסה כאן — סימולציה של הקוד</div>
+    <div class="demo-input-row">
+      <input class="demo-input" id="nameInput" placeholder="הקלד את שמך..." />
+      <button class="demo-run" onclick="runGreeting()">הרץ ▶</button>
+    </div>
+    <div class="demo-output" id="greetOutput">ממתין לקלט...</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">חלק ג׳ — קלט של מספרים</div>
+  <h2>input() תמיד מחזיר טקסט!</h2>
+  <p>זה חשוב מאוד: גם אם המשתמש הקליד את המספר 5, input() יחזיר את ה-string "5" — לא את המספר 5. כדי לחשב עם זה, צריך להמיר.</p>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span>קלט של מספר — int() ממיר string למספר</span></div>
+    <pre><span class="var">age_text</span> = <span class="fn">input</span>(<span class="str">"כמה אתה בן? "</span>)
+<span class="var">age</span> = <span class="fn">int</span>(<span class="var">age_text</span>)        <span class="cm"># ממיר string למספר שלם</span>
+<span class="var">next_year</span> = <span class="var">age</span> + <span class="num-c">1</span>
+
+<span class="fn">print</span>(<span class="str">f"בשנה הבאה תהיה בן <span style="color:#f78c6c">{next_year}</span>"</span>)
+
+<span class="cm"># או בשורה אחת:</span>
+<span class="var">age</span> = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"כמה אתה בן? "</span>))</pre>
+  </div>
+
+  <div class="callout warn">
+    <div class="callout-title">שגיאה נפוצה</div>
+    אם המשתמש יקליד "שלום" במקום מספר, <code style="font-family:'Fira Code',monospace">int()</code> יזרוק שגיאה. בשיעור 15 נלמד איך לטפל בזה נכון עם try/except.
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">חלק ד׳ — פרויקט קטן</div>
+  <h2>מחשבון גיל — כתוב ב-Colab</h2>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span>מחשבון גיל — שלב ראשון שלך</span></div>
+    <pre><span class="var">name</span> = <span class="fn">input</span>(<span class="str">"מה שמך? "</span>)
+<span class="var">birth_year</span> = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"באיזו שנה נולדת? "</span>))
+<span class="var">age</span> = <span class="num-c">2024</span> - <span class="var">birth_year</span>
+
+<span class="fn">print</span>(<span class="str">f"שלום <span style="color:#f78c6c">{name}</span>!"</span>)
+<span class="fn">print</span>(<span class="str">f"אתה בן/בת בערך <span style="color:#f78c6c">{age}</span> שנים."</span>)</pre>
+  </div>
+
+  <div class="callout success">
+    <div class="callout-title">כל הכבוד</div>
+    זו תוכנה אמיתית שמקבלת קלט, מחשבת, ומציגה תוצאה. בדיוק כמו כל אפליקציה — רק פשוטה יותר.
+  </div>
+
+  <div class="exercise-box">
+    <div class="exercise-header">
+      <span class="exercise-badge">תרגיל</span>
+      <span class="exercise-title">בדוק את עצמך</span>
+    </div>
+    <p style="font-size:15px;color:var(--muted);margin-bottom:1rem;">לחץ על כל שאלה לתשובה.</p>
+    <div class="question" onclick="toggleAnswer(this)">
+      <div class="question-text">1. למה input() תמיד מחזיר string גם אם הקלדנו מספר?</div>
+      <div class="toggle-hint">לחץ לתשובה</div>
+      <div class="answer">כי Python לא יודע מה המשתמש הולך להקליד לפני שהוא מקליד. אז היא תמיד שומרת את הקלט כטקסט (string). אנחנו צריכים להגיד לה בעצמנו: "זה מספר" — ולכן משתמשים ב-int() לאחר מכן.</div>
+    </div>
+    <div class="question" onclick="toggleAnswer(this)">
+      <div class="question-text">2. מה ההבדל בין print() ל-input()?</div>
+      <div class="toggle-hint">לחץ לתשובה</div>
+      <div class="answer">print() שולח מידע החוצה — מציג למשתמש. input() מקבל מידע פנימה — מקשיב למשתמש. print = פלט, input = קלט.</div>
+    </div>
+    <div class="question" onclick="toggleAnswer(this)">
+      <div class="question-text">3. מה יקרה אם נכתוב: age = input("גיל: ") ואז print(age + 1)?</div>
+      <div class="toggle-hint">לחץ לתשובה</div>
+      <div class="answer">שגיאה! כי age הוא string (טקסט), ולא ניתן לחבר string עם מספר (1). הפתרון: age = int(input("גיל: ")) — כך age יהיה מספר אמיתי.</div>
+    </div>
+  </div>
+
+  <div class="ai-section">
+    <div class="ai-icon">🤖</div>
+    <div class="ai-text"><h3>לא הבנת משהו?</h3><p>שאל AI — הוא יסביר בדיוק מה שלא ברור.</p></div>
+    <a class="ai-btn" href="https://claude.ai/new?q=אני+לומד+Python+שיעור+6+על+input+קלט.+יש+לי+שאלה:" target="_blank">שאל AI ↗</a>
+  </div>
+
+  <div class="nav-row">
+    <a class="nav-btn" href="lesson-05.html">→ שיעור קודם</a>
+    <a class="nav-btn primary" href="lesson-07.html">שיעור הבא — if/else ←</a>
+  </div>
+</div>
+
+<script>
+function toggleAnswer(el){const a=el.querySelector('.answer'),h=el.querySelector('.toggle-hint'),o=a.classList.contains('show');a.classList.toggle('show',!o);h.textContent=o?'לחץ לתשובה':'לחץ להסתרה'}
+function runGreeting(){const n=document.getElementById('nameInput').value.trim();const o=document.getElementById('greetOutput');o.textContent=n?`שלום, ${n}! ברוך הבא.`:'אנא הקלד שם קודם...'}
+</script>
+</body>
+</html>

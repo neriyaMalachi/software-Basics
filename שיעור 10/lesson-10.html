@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>שיעור 10 — לולאת for</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f1117;--surface:#181c27;--surface2:#1e2333;--border:#2a3045;--accent:#4f8ef7;--text:#e8ecf4;--muted:#7a85a0;--success:#3ecf8e;--warn:#f7c94f;--code-bg:#141720}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;font-size:17px;line-height:1.8;min-height:100vh}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.course-label{font-size:12px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.sep{color:var(--border)}
+.lesson-label{font-size:14px;font-weight:500}
+.progress-pill{background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:4px 14px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.progress-dot{width:8px;height:8px;border-radius:50%;background:#4f8ef7;box-shadow:0 0 6px #4f8ef7}
+.hero{padding:4rem 2rem 2rem;max-width:760px;margin:0 auto}
+.lesson-num{font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:#4f8ef7;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.lesson-num::before{content:'';display:inline-block;width:24px;height:2px;background:#4f8ef7;border-radius:2px}
+.hero h1{font-size:clamp(28px,5vw,44px);font-weight:700;line-height:1.2;letter-spacing:-.02em;margin-bottom:1rem;background:linear-gradient(135deg,var(--text) 60%,var(--muted));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:16px;color:var(--muted);margin-bottom:2rem}
+.tags{display:flex;gap:8px;flex-wrap:wrap}
+.tag{font-size:12px;padding:4px 12px;border-radius:99px;border:1px solid var(--border);color:var(--muted)}
+.tag.blue{border-color:#4f8ef7;color:#4f8ef7}
+.tag.green{border-color:var(--success);color:var(--success)}
+.main{max-width:760px;margin:0 auto;padding:0 2rem 6rem}
+.divider{height:1px;background:var(--border);margin:2.5rem 0}
+.section-label{font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem}
+h2{font-size:22px;font-weight:700;margin-bottom:.75rem}
+p{color:#bfc8df;margin-bottom:1rem}
+.callout{background:var(--surface2);border:1px solid var(--border);border-right:3px solid #4f8ef7;border-radius:8px;padding:1rem 1.2rem;margin:1.5rem 0;font-size:15px;color:var(--text);line-height:1.7}
+.callout.success{border-right-color:var(--success)}
+.callout.warn{border-right-color:var(--warn)}
+.callout-title{font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4rem;color:#4f8ef7}
+.callout.success .callout-title{color:var(--success)}
+.callout.warn .callout-title{color:var(--warn)}
+.code-block{background:var(--code-bg);border:1px solid var(--border);border-radius:10px;margin:1.5rem 0;overflow:hidden}
+.code-header{background:var(--surface);border-bottom:1px solid var(--border);padding:.5rem 1rem;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot.r{background:#ff5f57}.dot.y{background:#febc2e}.dot.g{background:#28c840}
+pre{padding:1.2rem 1.4rem;font-family:'Fira Code',monospace;font-size:14px;line-height:1.8;overflow-x:auto}
+.kw{color:#c792ea}.fn{color:#82aaff}.str{color:#c3e88d}.cm{color:#546e7a;font-style:italic}.num-c{color:#f78c6c}.var{color:#e8ecf4}
+
+/* range visual */
+.range-viz{display:flex;gap:6px;flex-wrap:wrap;margin:1.5rem 0;align-items:center}
+.range-num{width:42px;height:42px;background:var(--surface);border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Fira Code',monospace;font-size:16px;font-weight:500;color:#4f8ef7;transition:background .3s,border-color .3s}
+.range-num.active{background:#0e1a30;border-color:#4f8ef7;color:#4f8ef7}
+.range-num.done{background:#0e2018;border-color:var(--success);color:var(--success)}
+.range-num.current{background:#1e3a5f;border-color:#82aaff;color:#fff;transform:scale(1.1)}
+.range-label{font-size:13px;color:var(--muted);width:100%;margin-bottom:.4rem}
+
+/* compare table */
+.compare-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:1.5rem 0}
+.compare-row{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border)}
+.compare-row:last-child{border-bottom:none}
+.compare-cell{padding:.9rem 1.1rem}
+.compare-cell:first-child{border-left:1px solid var(--border)}
+.compare-head{background:var(--surface2);font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:.6rem 1.1rem}
+.compare-head:first-child{border-left:1px solid var(--border);color:#c792ea}
+.compare-head:last-child{color:#4f8ef7}
+.compare-cell pre{padding:0;font-size:13px}
+
+/* interactive multiplier */
+.mult-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.mult-label{font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.75rem}
+.mult-controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:1rem}
+.mult-controls label{font-size:14px;color:var(--muted)}
+.mult-input{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.5rem .8rem;font-family:'Heebo',sans-serif;font-size:15px;color:var(--text);width:72px;outline:none}
+.mult-input:focus{border-color:#4f8ef7}
+.mult-run{background:#4f8ef7;color:#fff;font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;padding:.5rem 1rem;border-radius:8px;border:none;cursor:pointer}
+.mult-run:hover{opacity:.88}
+.mult-output{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:.8rem 1rem;font-family:'Fira Code',monospace;font-size:13px;color:var(--success);min-height:50px;max-height:240px;overflow-y:auto;white-space:pre}
+
+/* milestone banner */
+.milestone{background:linear-gradient(135deg,#0e1a30,#160e2a);border:1px solid #3a3060;border-radius:12px;padding:1.5rem;margin:2rem 0;text-align:center}
+.milestone h3{font-size:20px;font-weight:700;margin-bottom:.5rem}
+.milestone p{font-size:15px;color:var(--muted);margin:0}
+
+.exercise-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-top:2rem}
+.exercise-header{display:flex;align-items:center;gap:10px;margin-bottom:1rem}
+.exercise-badge{background:#1a2a1a;border:1px solid #2d5a2d;color:var(--success);font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:99px}
+.exercise-title{font-size:18px;font-weight:700}
+.question{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.9rem 1.1rem;margin-bottom:.75rem;cursor:pointer;transition:border-color .2s}
+.question:hover{border-color:#4f8ef7}
+.question-text{color:var(--text);font-weight:500;font-size:15px;margin-bottom:.25rem}
+.answer{display:none;font-size:14px;color:var(--success);margin-top:.5rem;padding-top:.5rem;border-top:1px solid var(--border);line-height:1.6}
+.answer.show{display:block}
+.toggle-hint{font-size:12px;color:var(--muted);margin-top:4px}
+.ai-section{margin-top:3rem;background:linear-gradient(135deg,#0e1a30,#0f1117);border:1px solid #1e3a5f;border-radius:12px;padding:1.5rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+.ai-icon{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#4f8ef7,#7c5cfc);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.ai-text{flex:1;min-width:200px}
+.ai-text h3{font-size:16px;font-weight:700;margin-bottom:.25rem}
+.ai-text p{font-size:14px;color:var(--muted);margin:0}
+.ai-btn{display:inline-flex;align-items:center;gap:8px;background:#4f8ef7;color:#fff;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;padding:.6rem 1.3rem;border-radius:8px;text-decoration:none;white-space:nowrap}
+.ai-btn:hover{opacity:.88}
+.nav-row{display:flex;justify-content:space-between;margin-top:3rem;gap:12px}
+.nav-btn{display:inline-flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'Heebo',sans-serif;font-size:14px;font-weight:500;padding:.6rem 1.3rem;border-radius:8px;text-decoration:none;transition:border-color .15s}
+.nav-btn:hover{border-color:#4f8ef7;color:#4f8ef7}
+.nav-btn.primary{background:#4f8ef7;border-color:#4f8ef7;color:#fff}
+.nav-btn.primary:hover{opacity:.88;color:#fff}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="course-label">Python למתחילים</span>
+    <span class="sep">›</span>
+    <span class="lesson-label">שיעור 10 מתוך 20</span>
+  </div>
+  <div class="progress-pill"><div class="progress-dot"></div>שלב 1 — Python בסיסי</div>
+</div>
+
+<div class="hero">
+  <div class="lesson-num">שיעור 10</div>
+  <h1>לולאת for</h1>
+  <p class="hero-sub">הלולאה הכי נפוצה ב-Python. עוברת על כל פריט ברשימה — אחד אחד, בסדר.</p>
+  <div class="tags">
+    <span class="tag blue">Python</span>
+    <span class="tag green">שלב 1 — הושלם!</span>
+    <span class="tag">15 דקות</span>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="section-label">חלק א׳ — for מול while</div>
+  <h2>שתי לולאות — שני שימושים שונים</h2>
+  <p>בשיעור הקודם למדנו <code style="font-family:'Fira Code',monospace;color:#c792ea">while</code> — חוזר כל עוד תנאי מסוים נכון. היום נלמד <code style="font-family:'Fira Code',monospace;color:#c792ea">for</code> — עובר על פריטים ברשימה מוגדרת, בדיוק פעם אחת על כל אחד.</p>
+
+  <div class="compare-card">
+    <div class="compare-row">
+      <div class="compare-head">while — "כל עוד..."</div>
+      <div class="compare-head">for — "לכל אחד ב..."</div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-cell"><pre><span class="var">x</span> = <span class="num-c">1</span>
+<span class="kw">while</span> <span class="var">x</span> <= <span class="num-c">5</span>:
+    <span class="fn">print</span>(<span class="var">x</span>)
+    <span class="var">x</span> += <span class="num-c">1</span></pre></div>
+      <div class="compare-cell"><pre><span class="kw">for</span> <span class="var">x</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num-c">1</span>, <span class="num-c">6</span>):
+    <span class="fn">print</span>(<span class="var">x</span>)
+
+
+</pre></div>
+    </div>
+    <div class="compare-row">
+      <div class="compare-cell" style="font-size:13px;color:var(--muted)">צריך לנהל את x בעצמך</div>
+      <div class="compare-cell" style="font-size:13px;color:var(--success)">Python מנהלת את x אוטומטית</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">חלק ב׳ — range()</div>
+  <h2>range() — יוצר רצף מספרים</h2>
+  <p><code style="font-family:'Fira Code',monospace;color:#82aaff">range()</code> מגדיר מאיפה מתחילים, איפה עוצרים, ובאיזה קפיצות. הלולאה for עוברת על כל מספר ברצף.</p>
+
+  <div class="range-viz" id="range-viz">
+    <div class="range-label">range(1, 6) — מ-1 עד 5 (6 לא כלול):</div>
+    <div class="range-num" id="rn-1">1</div>
+    <div class="range-num" id="rn-2">2</div>
+    <div class="range-num" id="rn-3">3</div>
+    <div class="range-num" id="rn-4">4</div>
+    <div class="range-num" id="rn-5">5</div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span>שלוש צורות של range()</span></div>
+    <pre><span class="cm"># range(stop) — מ-0 עד stop-1</span>
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num-c">5</span>):
+    <span class="fn">print</span>(<span class="var">i</span>)   <span class="cm"># 0 1 2 3 4</span>
+
+<span class="cm"># range(start, stop) — מ-start עד stop-1</span>
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num-c">1</span>, <span class="num-c">6</span>):
+    <span class="fn">print</span>(<span class="var">i</span>)   <span class="cm"># 1 2 3 4 5</span>
+
+<span class="cm"># range(start, stop, step) — קפיצות</span>
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num-c">0</span>, <span class="num-c">11</span>, <span class="num-c">2</span>):
+    <span class="fn">print</span>(<span class="var">i</span>)   <span class="cm"># 0 2 4 6 8 10</span></pre>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">range(5) = 0 עד 4</div>
+    Python סופרת מ-0, לא מ-1. לכן range(5) נותן 0,1,2,3,4 — חמישה מספרים. וה-stop תמיד לא כלול. כדי לקבל 1 עד 5 — כתוב range(1, 6).
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">חלק ג׳ — לוח כפל אינטראקטיבי</div>
+  <h2>for בפעולה — בנה לוח כפל</h2>
+
+  <div class="mult-box">
+    <div class="mult-label">בחר מספר וראה את לוח הכפל שלו</div>
+    <div class="mult-controls">
+      <label>לוח כפל של:</label>
+      <input class="mult-input" type="number" id="multNum" value="7" min="1" max="12">
+      <button class="mult-run" onclick="runMult()">הרץ ▶</button>
+    </div>
+    <div class="mult-output" id="multOutput"></div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span>הקוד מאחורי הסימולציה</span></div>
+    <pre><span class="var">num</span> = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"לוח כפל של: "</span>))
+
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num-c">1</span>, <span class="num-c">11</span>):
+    <span class="var">result</span> = <span class="var">num</span> * <span class="var">i</span>
+    <span class="fn">print</span>(<span class="str">f"<span style='color:#f78c6c'>{num}</span> x <span style='color:#f78c6c'>{i}</span> = <span style='color:#f78c6c'>{result}</span>"</span>)</pre>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">חלק ד׳ — for על טקסט</div>
+  <h2>for עובר גם על אותיות בטקסט</h2>
+  <p>לא רק מספרים — for יכול לעבור על כל אות בתוך מחרוזת, אחת אחת.</p>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span>עבור על אותיות</span></div>
+    <pre><span class="var">word</span> = <span class="str">"Python"</span>
+
+<span class="kw">for</span> <span class="var">letter</span> <span class="kw">in</span> <span class="var">word</span>:
+    <span class="fn">print</span>(<span class="var">letter</span>)
+
+<span class="cm"># פלט:
+# P
+# y
+# t
+# h
+# o
+# n</span></pre>
+  </div>
+
+  <div class="callout success">
+    <div class="callout-title">טיפ — for עם enumerate()</div>
+    אם צריך גם את המספר וגם את הפריט:<br>
+    <code style="font-family:'Fira Code',monospace;color:#c3e88d">for i, letter in enumerate("Python"):</code><br>
+    <code style="font-family:'Fira Code',monospace;color:#c3e88d">&nbsp;&nbsp;&nbsp;&nbsp;print(f"אות {i}: {letter}")</code><br>
+    → אות 0: P, אות 1: y ...
+  </div>
+
+  <div class="milestone">
+    <h3>סיימת את שלב 1!</h3>
+    <p>למדת משתנים, strings, קלט, תנאים, ו-2 סוגי לולאות. אלו הכלים הבסיסיים של כל מתכנת בעולם. שלב 2 מחכה.</p>
+  </div>
+
+  <div class="exercise-box">
+    <div class="exercise-header">
+      <span class="exercise-badge">תרגיל</span>
+      <span class="exercise-title">בדוק את עצמך</span>
+    </div>
+    <p style="font-size:15px;color:var(--muted);margin-bottom:1rem;">לחץ על כל שאלה לתשובה.</p>
+    <div class="question" onclick="toggleAnswer(this)">
+      <div class="question-text">1. מה יציג range(3)? ומה יציג range(1, 4)?</div>
+      <div class="toggle-hint">לחץ לתשובה</div>
+      <div class="answer">range(3) יציג: 0, 1, 2 — מתחיל מ-0 ועד 2 (3 לא כלול). range(1, 4) יציג: 1, 2, 3 — מתחיל מ-1 ועד 3 (4 לא כלול). ה-stop תמיד לא כלול!</div>
+    </div>
+    <div class="question" onclick="toggleAnswer(this)">
+      <div class="question-text">2. מתי עדיף for ומתי עדיף while?</div>
+      <div class="toggle-hint">לחץ לתשובה</div>
+      <div class="answer">for כשיודעים מראש כמה פעמים לחזור — או עוברים על רשימה. while כשלא יודעים מראש, ומחכים לאיזושהי תוצאה. דוגמה: "הדפס 10 מספרים" → for. "המשך לשאול עד שהמשתמש יקליד נכון" → while.</div>
+    </div>
+    <div class="question" onclick="toggleAnswer(this)">
+      <div class="question-text">3. כתוב לולאה שמחשבת את סכום כל המספרים מ-1 עד 100</div>
+      <div class="toggle-hint">לחץ לתשובה</div>
+      <div class="answer">total = 0 ← for i in range(1, 101): ← (4 רווחים) total += i ← print(total). התשובה היא 5050. range(1, 101) כי 101 לא כלול, ואנחנו רוצים עד 100.</div>
+    </div>
+    <div class="question" onclick="toggleAnswer(this)">
+      <div class="question-text">4. מה יקרה אם נכתוב for letter in "שלום"?</div>
+      <div class="toggle-hint">לחץ לתשובה</div>
+      <div class="answer">הלולאה תעבור על כל אות בנפרד: ש, ל, ו, ם — כל אחת בשורה נפרדת. for יכול לעבור על כל דבר שניתן לעבור עליו — מחרוזת, רשימה, range, ועוד. זה אחד הדברים הכי חזקים בו.</div>
+    </div>
+  </div>
+
+  <div class="ai-section">
+    <div class="ai-icon">🤖</div>
+    <div class="ai-text"><h3>לא הבנת משהו?</h3><p>שאל AI — הוא יסביר בדיוק מה שלא ברור.</p></div>
+    <a class="ai-btn" href="https://claude.ai/new?q=אני+לומד+Python+שיעור+10+על+לולאת+for.+יש+לי+שאלה:" target="_blank">שאל AI ↗</a>
+  </div>
+
+  <div class="nav-row">
+    <a class="nav-btn" href="lesson-09.html">→ שיעור קודם</a>
+    <a class="nav-btn primary" href="lesson-11.html">שיעור הבא — רשימות ←</a>
+  </div>
+</div>
+
+<script>
+function toggleAnswer(el){const a=el.querySelector('.answer'),h=el.querySelector('.toggle-hint'),o=a.classList.contains('show');a.classList.toggle('show',!o);h.textContent=o?'לחץ לתשובה':'לחץ להסתרה'}
+
+function runMult(){
+  const n=parseInt(document.getElementById('multNum').value)||7;
+  let out='';
+  for(let i=1;i<=10;i++) out+=`${n} × ${i} = ${n*i}\n`;
+  document.getElementById('multOutput').textContent=out.trim();
+}
+
+// animate range viz
+let rangeIdx=0;
+const nums=[1,2,3,4,5];
+function animateRange(){
+  if(rangeIdx>0) document.getElementById('rn-'+rangeIdx).className='range-num done';
+  rangeIdx++;
+  if(rangeIdx<=5){
+    document.getElementById('rn-'+rangeIdx).className='range-num current';
+    setTimeout(animateRange,600);
+  }
+}
+setTimeout(animateRange,800);
+
+// init mult
+runMult();
+</script>
+</body>
+</html>

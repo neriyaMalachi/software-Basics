@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>שיעור 4 — משתנים ומספרים</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f1117;--surface:#181c27;--surface2:#1e2333;--border:#2a3045;--accent:#4f8ef7;--accent2:#7c5cfc;--text:#e8ecf4;--muted:#7a85a0;--success:#3ecf8e;--warn:#f7c94f;--code-bg:#141720}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;font-size:17px;line-height:1.8;min-height:100vh}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.course-label{font-size:12px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.sep{color:var(--border)}
+.lesson-label{font-size:14px;font-weight:500}
+.progress-pill{background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:4px 14px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.progress-dot{width:8px;height:8px;border-radius:50%;background:#4f8ef7;box-shadow:0 0 6px #4f8ef7}
+.hero{padding:4rem 2rem 2rem;max-width:760px;margin:0 auto}
+.lesson-num{font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:#4f8ef7;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.lesson-num::before{content:'';display:inline-block;width:24px;height:2px;background:#4f8ef7;border-radius:2px}
+.hero h1{font-size:clamp(28px,5vw,44px);font-weight:700;line-height:1.2;letter-spacing:-.02em;margin-bottom:1rem;background:linear-gradient(135deg,var(--text) 60%,var(--muted));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:16px;color:var(--muted);margin-bottom:2rem}
+.tags{display:flex;gap:8px;flex-wrap:wrap}
+.tag{font-size:12px;padding:4px 12px;border-radius:99px;border:1px solid var(--border);color:var(--muted)}
+.tag.blue{border-color:#4f8ef7;color:#4f8ef7}
+.main{max-width:760px;margin:0 auto;padding:0 2rem 6rem}
+.divider{height:1px;background:var(--border);margin:2.5rem 0}
+.section-label{font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem}
+h2{font-size:22px;font-weight:700;margin-bottom:.75rem}
+p{color:#bfc8df;margin-bottom:1rem}
+.callout{background:var(--surface2);border:1px solid var(--border);border-right:3px solid #4f8ef7;border-radius:8px;padding:1rem 1.2rem;margin:1.5rem 0;font-size:15px;color:var(--text);line-height:1.7}
+.callout.success{border-right-color:var(--success)}
+.callout.warn{border-right-color:var(--warn)}
+.callout-title{font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4rem;color:#4f8ef7}
+.callout.success .callout-title{color:var(--success)}
+.callout.warn .callout-title{color:var(--warn)}
+.code-block{background:var(--code-bg);border:1px solid var(--border);border-radius:10px;margin:1.5rem 0;overflow:hidden}
+.code-header{background:var(--surface);border-bottom:1px solid var(--border);padding:.5rem 1rem;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot.r{background:#ff5f57}.dot.y{background:#febc2e}.dot.g{background:#28c840}
+pre{padding:1.2rem 1.4rem;font-family:'Fira Code',monospace;font-size:14px;line-height:1.8;overflow-x:auto}
+.kw{color:#c792ea}.fn{color:#82aaff}.str{color:#c3e88d}.cm{color:#546e7a;font-style:italic}.num-c{color:#f78c6c}.var{color:#e8ecf4}
+/* box analogy */
+.box-row{display:flex;gap:16px;flex-wrap:wrap;margin:1.5rem 0}
+.box-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.2rem;flex:1;min-width:140px;text-align:center}
+.box-label{font-size:12px;color:var(--muted);margin-bottom:.4rem}
+.box-name{font-family:'Fira Code',monospace;font-size:16px;color:#4f8ef7;font-weight:500}
+.box-val{font-family:'Fira Code',monospace;font-size:22px;color:var(--success);margin-top:.3rem;font-weight:700}
+/* ops table */
+.ops-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin:1.5rem 0}
+.op-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.8rem 1rem;text-align:center}
+.op-sym{font-family:'Fira Code',monospace;font-size:24px;color:#f7c94f;font-weight:700}
+.op-name{font-size:13px;color:var(--muted);margin-top:.2rem}
+.op-ex{font-family:'Fira Code',monospace;font-size:12px;color:var(--success);margin-top:.3rem}
+.exercise-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-top:2rem}
+.exercise-header{display:flex;align-items:center;gap:10px;margin-bottom:1rem}
+.exercise-badge{background:#1a2a1a;border:1px solid #2d5a2d;color:var(--success);font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:99px}
+.exercise-title{font-size:18px;font-weight:700}
+.question{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.9rem 1.1rem;margin-bottom:.75rem;cursor:pointer;transition:border-color .2s}
+.question:hover{border-color:#4f8ef7}
+.question-text{color:var(--text);font-weight:500;font-size:15px;margin-bottom:.25rem}
+.answer{display:none;font-size:14px;color:var(--success);margin-top:.5rem;padding-top:.5rem;border-top:1px solid var(--border);line-height:1.6}
+.answer.show{display:block}
+.toggle-hint{font-size:12px;color:var(--muted);margin-top:4px}
+.ai-section{margin-top:3rem;background:linear-gradient(135deg,#0e1a30,#0f1117);border:1px solid #1e3a5f;border-radius:12px;padding:1.5rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+.ai-icon{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#4f8ef7,#7c5cfc);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.ai-text{flex:1;min-width:200px}
+.ai-text h3{font-size:16px;font-weight:700;margin-bottom:.25rem}
+.ai-text p{font-size:14px;color:var(--muted);margin:0}
+.ai-btn{display:inline-flex;align-items:center;gap:8px;background:#4f8ef7;color:#fff;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;padding:.6rem 1.3rem;border-radius:8px;border:none;cursor:pointer;text-decoration:none;white-space:nowrap}
+.ai-btn:hover{opacity:.88}
+.nav-row{display:flex;justify-content:space-between;margin-top:3rem;gap:12px}
+.nav-btn{display:inline-flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'Heebo',sans-serif;font-size:14px;font-weight:500;padding:.6rem 1.3rem;border-radius:8px;text-decoration:none;transition:border-color .15s}
+.nav-btn:hover{border-color:#4f8ef7;color:#4f8ef7}
+.nav-btn.primary{background:#4f8ef7;border-color:#4f8ef7;color:#fff}
+.nav-btn.primary:hover{opacity:.88;color:#fff}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="course-label">Python למתחילים</span>
+    <span class="sep">›</span>
+    <span class="lesson-label">שיעור 4 מתוך 20</span>
+  </div>
+  <div class="progress-pill"><div class="progress-dot"></div>שלב 1 — Python בסיסי</div>
+</div>
+
+<div class="hero">
+  <div class="lesson-num">שיעור 4</div>
+  <h1>משתנים ומספרים</h1>
+  <p class="hero-sub">איך שומרים מידע? ואיך Python מחשב? הרעיונות שיחזרו בכל שיעור מכאן.</p>
+  <div class="tags">
+    <span class="tag blue">Python</span>
+    <span class="tag">15 דקות</span>
+    <span class="tag">קוד ב-Colab</span>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="section-label">חלק א׳ — מה זה משתנה?</div>
+  <h2>משתנה = קופסה עם שם ותוכן</h2>
+  <p>דמיין שיש לך קופסה. אתה כותב עליה שם ("גיל"), שם בתוכן מתוכן ("25"). בכל פעם שתרצה לדעת את הגיל — תפתח את הקופסה.</p>
+  <p>בדיוק כך עובד משתנה ב-Python. שם אחד, ערך אחד — ואפשר לשנות את הערך בכל שלב.</p>
+
+  <div class="box-row">
+    <div class="box-card"><div class="box-label">שם המשתנה</div><div class="box-name">age</div><div class="box-val">25</div></div>
+    <div class="box-card"><div class="box-label">שם המשתנה</div><div class="box-name">score</div><div class="box-val">100</div></div>
+    <div class="box-card"><div class="box-label">שם המשתנה</div><div class="box-name">year</div><div class="box-val">2024</div></div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span>יצירת משתנים</span></div>
+    <pre><span class="var">age</span> = <span class="num-c">25</span>
+<span class="var">score</span> = <span class="num-c">100</span>
+<span class="var">year</span> = <span class="num-c">2024</span>
+
+<span class="fn">print</span>(<span class="var">age</span>)    <span class="cm"># יציג: 25</span>
+<span class="fn">print</span>(<span class="var">score</span>)  <span class="cm"># יציג: 100</span></pre>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">שים לב</div>
+    הסימן <code style="font-family:'Fira Code',monospace;color:#82aaff">=</code> ב-Python לא אומר "שווה" — הוא אומר "שמור בתוך". כך: <code style="font-family:'Fira Code',monospace;color:#c3e88d">age = 25</code> פירושו "שמור את המספר 25 בתוך הקופסה שנקראת age".
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">חלק ב׳ — פעולות מתמטיות</div>
+  <h2>Python כמחשבון</h2>
+  <p>Python יודעת לבצע כל פעולה מתמטית — ועם משתנים זה הופך לחזק מאוד.</p>
+
+  <div class="ops-grid">
+    <div class="op-card"><div class="op-sym">+</div><div class="op-name">חיבור</div><div class="op-ex">5 + 3 = 8</div></div>
+    <div class="op-card"><div class="op-sym">-</div><div class="op-name">חיסור</div><div class="op-ex">10 - 4 = 6</div></div>
+    <div class="op-card"><div class="op-sym">*</div><div class="op-name">כפל</div><div class="op-ex">3 * 4 = 12</div></div>
+    <div class="op-card"><div class="op-sym">/</div><div class="op-name">חילוק</div><div class="op-ex">10 / 2 = 5</div></div>
+    <div class="op-card"><div class="op-sym">**</div><div class="op-name">חזקה</div><div class="op-ex">2 ** 3 = 8</div></div>
+    <div class="op-card"><div class="op-sym">%</div><div class="op-name">שארית</div><div class="op-ex">10 % 3 = 1</div></div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span>חישובים עם משתנים — הרץ ב-Colab</span></div>
+    <pre><span class="var">price</span> = <span class="num-c">50</span>
+<span class="var">quantity</span> = <span class="num-c">3</span>
+<span class="var">total</span> = <span class="var">price</span> * <span class="var">quantity</span>
+
+<span class="fn">print</span>(<span class="str">"סה״כ לתשלום:"</span>, <span class="var">total</span>)
+<span class="cm"># יציג: סה״כ לתשלום: 150</span></pre>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">חלק ג׳ — שינוי ערך משתנה</div>
+  <h2>ניתן לשנות את הערך בכל שלב</h2>
+  <p>השם נשאר — רק הערך בפנים משתנה. בדיוק כמו שאפשר לרוקן קופסה וללשים בה משהו אחר.</p>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span>שינוי ערך משתנה</span></div>
+    <pre><span class="var">score</span> = <span class="num-c">0</span>
+<span class="fn">print</span>(<span class="var">score</span>)   <span class="cm"># יציג: 0</span>
+
+<span class="var">score</span> = <span class="num-c">10</span>
+<span class="fn">print</span>(<span class="var">score</span>)   <span class="cm"># יציג: 10</span>
+
+<span class="var">score</span> = <span class="var">score</span> + <span class="num-c">5</span>
+<span class="fn">print</span>(<span class="var">score</span>)   <span class="cm"># יציג: 15</span></pre>
+  </div>
+
+  <div class="callout success">
+    <div class="callout-title">טיפ</div>
+    <code style="font-family:'Fira Code',monospace">score = score + 5</code> פירושו: "קח את הערך הנוכחי של score, הוסף לו 5, ושמור חזרה ב-score". אפשר לכתוב גם בקיצור: <code style="font-family:'Fira Code',monospace">score += 5</code>
+  </div>
+
+  <div class="exercise-box">
+    <div class="exercise-header">
+      <span class="exercise-badge">תרגיל</span>
+      <span class="exercise-title">בדוק את עצמך</span>
+    </div>
+    <p style="font-size:15px;color:var(--muted);margin-bottom:1rem;">לחץ על כל שאלה לתשובה.</p>
+    <div class="question" onclick="toggleAnswer(this)">
+      <div class="question-text">1. מה יודפס? <code style="font-family:'Fira Code',monospace;font-size:13px">x = 10; x = x * 2; print(x)</code></div>
+      <div class="toggle-hint">לחץ לתשובה</div>
+      <div class="answer">יודפס 20. קודם x מקבל ערך 10, אחר כך x מקבל את הערך של x * 2 שזה 10 * 2 = 20.</div>
+    </div>
+    <div class="question" onclick="toggleAnswer(this)">
+      <div class="question-text">2. מה ההבדל בין = למתמטיקה לבין = ב-Python?</div>
+      <div class="toggle-hint">לחץ לתשובה</div>
+      <div class="answer">במתמטיקה = אומר "שווה". ב-Python = אומר "שמור את הערך הזה בתוך המשתנה הזה". לכן x = x + 1 הגיוני לגמרי ב-Python (קח את x, הוסף 1, שמור חזרה), אבל לא הגיוני במתמטיקה.</div>
+    </div>
+    <div class="question" onclick="toggleAnswer(this)">
+      <div class="question-text">3. כתוב קוד שיוצר משתנה עם שמך ומדפיס אותו</div>
+      <div class="toggle-hint">לחץ לתשובה</div>
+      <div class="answer">name = "ישראל" — ואז print(name). שים לב: מספרים בלי מרכאות, טקסט עם מרכאות. זה ההבדל בין 25 ל-"ישראל".</div>
+    </div>
+  </div>
+
+  <div class="ai-section">
+    <div class="ai-icon">🤖</div>
+    <div class="ai-text"><h3>לא הבנת משהו?</h3><p>שאל AI — הוא יסביר בדיוק מה שלא ברור.</p></div>
+    <a class="ai-btn" href="https://claude.ai/new?q=אני+לומד+Python+שיעור+4+על+משתנים+ומספרים.+יש+לי+שאלה:" target="_blank">שאל AI ↗</a>
+  </div>
+
+  <div class="nav-row">
+    <a class="nav-btn" href="lesson-03.html">→ שיעור קודם</a>
+    <a class="nav-btn primary" href="lesson-05.html">שיעור הבא — טקסט ←</a>
+  </div>
+</div>
+
+<script>
+function toggleAnswer(el){const a=el.querySelector('.answer'),h=el.querySelector('.toggle-hint'),o=a.classList.contains('show');a.classList.toggle('show',!o);h.textContent=o?'לחץ לתשובה':'לחץ להסתרה'}
+</script>
+</body>
+</html>

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>שיעור 2 — מה זה שפת תכנות?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #181c27;
+    --surface2: #1e2333;
+    --border: #2a3045;
+    --accent: #4f8ef7;
+    --accent2: #7c5cfc;
+    --text: #e8ecf4;
+    --muted: #7a85a0;
+    --success: #3ecf8e;
+    --warn: #f7c94f;
+    --code-bg: #141720;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'Heebo', sans-serif; font-size: 17px; line-height: 1.8; min-height: 100vh; }
+
+  .topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 2rem; height: 56px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .topbar-left { display: flex; align-items: center; gap: 12px; }
+  .course-label { font-size: 12px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+  .sep { color: var(--border); }
+  .lesson-label { font-size: 14px; font-weight: 500; color: var(--text); }
+  .progress-pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 99px; padding: 4px 14px; font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+  .progress-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+
+  .hero { padding: 4rem 2rem 2rem; max-width: 760px; margin: 0 auto; }
+  .lesson-num { font-size: 12px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
+  .lesson-num::before { content: ''; display: inline-block; width: 24px; height: 2px; background: var(--accent); border-radius: 2px; }
+  .hero h1 { font-size: clamp(28px, 5vw, 44px); font-weight: 700; line-height: 1.2; letter-spacing: -.02em; margin-bottom: 1rem; background: linear-gradient(135deg, var(--text) 60%, var(--muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .hero-sub { font-size: 16px; color: var(--muted); margin-bottom: 2rem; }
+  .tags { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tag { font-size: 12px; padding: 4px 12px; border-radius: 99px; border: 1px solid var(--border); color: var(--muted); }
+  .tag.accent { border-color: var(--accent); color: var(--accent); }
+
+  .main { max-width: 760px; margin: 0 auto; padding: 0 2rem 6rem; }
+  .divider { height: 1px; background: var(--border); margin: 2.5rem 0; }
+  .section-label { font-size: 11px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+  h2 { font-size: 22px; font-weight: 700; margin-bottom: .75rem; letter-spacing: -.01em; }
+  p { color: #bfc8df; margin-bottom: 1rem; }
+
+  .callout { background: var(--surface2); border: 1px solid var(--border); border-right: 3px solid var(--accent); border-radius: 8px; padding: 1rem 1.2rem; margin: 1.5rem 0; font-size: 15px; color: var(--text); line-height: 1.7; }
+  .callout.success { border-right-color: var(--success); }
+  .callout.warn { border-right-color: var(--warn); }
+  .callout-title { font-size: 12px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; margin-bottom: .4rem; }
+  .callout .callout-title { color: var(--accent); }
+  .callout.success .callout-title { color: var(--success); }
+  .callout.warn .callout-title { color: var(--warn); }
+
+  /* language cards grid */
+  .lang-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin: 1.5rem 0; }
+  .lang-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.2rem; transition: border-color .18s; }
+  .lang-card:hover { border-color: var(--border); }
+  .lang-card.highlight { border-color: var(--accent); background: #0e1a30; }
+  .lang-top { display: flex; align-items: center; gap: 10px; margin-bottom: .5rem; }
+  .lang-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .lang-name { font-size: 15px; font-weight: 700; color: var(--text); }
+  .lang-badge { font-size: 11px; padding: 2px 8px; border-radius: 99px; margin-right: auto; }
+  .badge-python { background: #0e1a30; color: var(--accent); border: 1px solid #1e3a5f; }
+  .badge-web { background: #1a1a0e; color: var(--warn); border: 1px solid #3a3010; }
+  .badge-system { background: #1a0e0e; color: #f78080; border: 1px solid #3a1818; }
+  .badge-mobile { background: #0e1a18; color: var(--success); border: 1px solid #1a3830; }
+  .lang-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .lang-used { font-size: 12px; color: var(--muted); margin-top: .4rem; }
+  .lang-used span { color: var(--text); }
+
+  /* translation visual */
+  .translation-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin: 1.5rem 0; }
+  .trans-header { background: var(--surface2); border-bottom: 1px solid var(--border); padding: .6rem 1.2rem; font-size: 12px; color: var(--muted); }
+  .trans-row { display: grid; grid-template-columns: 1fr 40px 1fr; align-items: center; gap: 0; }
+  .trans-col { padding: 1.1rem 1.2rem; }
+  .trans-col.human { border-left: 1px solid var(--border); }
+  .trans-label { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: .5rem; }
+  .trans-text { font-size: 15px; color: var(--text); line-height: 1.6; }
+  .trans-text.code { font-family: 'Fira Code', monospace; font-size: 13px; color: #82aaff; }
+  .trans-arrow { text-align: center; font-size: 18px; color: var(--muted); }
+
+  /* code block */
+  .code-block { background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px; margin: 1.5rem 0; overflow: hidden; }
+  .code-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: .5rem 1rem; display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot.r { background: #ff5f57; } .dot.y { background: #febc2e; } .dot.g { background: #28c840; }
+  pre { padding: 1.2rem 1.4rem; font-family: 'Fira Code', monospace; font-size: 14px; line-height: 1.8; overflow-x: auto; }
+  .kw { color: #c792ea; } .fn { color: #82aaff; } .str { color: #c3e88d; } .cm { color: #546e7a; font-style: italic; } .num-c { color: #f78c6c; }
+
+  /* compare table */
+  .compare-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 14px; }
+  .compare-table th { background: var(--surface2); color: var(--muted); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; padding: .6rem 1rem; text-align: right; border-bottom: 1px solid var(--border); font-weight: 500; }
+  .compare-table td { padding: .75rem 1rem; border-bottom: 1px solid var(--border); color: #bfc8df; vertical-align: top; }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table td:first-child { font-family: 'Fira Code', monospace; color: var(--accent); font-weight: 500; font-size: 13px; }
+  .compare-table tr.highlight-row td { background: #0e1a30; }
+  .compare-table tr.highlight-row td:first-child { color: var(--success); }
+
+  /* exercise */
+  .exercise-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-top: 2rem; }
+  .exercise-header { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; }
+  .exercise-badge { background: #1a2a1a; border: 1px solid #2d5a2d; color: var(--success); font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; padding: 4px 10px; border-radius: 99px; }
+  .exercise-title { font-size: 18px; font-weight: 700; }
+  .question { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: .9rem 1.1rem; margin-bottom: .75rem; font-size: 15px; cursor: pointer; transition: border-color .2s; }
+  .question:hover { border-color: var(--accent); }
+  .question-text { color: var(--text); font-weight: 500; margin-bottom: .25rem; }
+  .answer { display: none; font-size: 14px; color: var(--success); margin-top: .5rem; padding-top: .5rem; border-top: 1px solid var(--border); line-height: 1.6; }
+  .answer.show { display: block; }
+  .toggle-hint { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  /* nav */
+  .nav-row { display: flex; justify-content: space-between; margin-top: 3rem; gap: 12px; }
+  .nav-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--surface2); border: 1px solid var(--border); color: var(--text); font-family: 'Heebo', sans-serif; font-size: 14px; font-weight: 500; padding: .6rem 1.3rem; border-radius: 8px; cursor: pointer; text-decoration: none; transition: border-color .15s; }
+  .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .nav-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .nav-btn.primary:hover { opacity: .88; color: #fff; }
+
+  /* ai section */
+  .ai-section { margin-top: 3rem; background: linear-gradient(135deg, #0e1a30, #0f1117); border: 1px solid #1e3a5f; border-radius: 12px; padding: 1.5rem; display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+  .ai-icon { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+  .ai-text { flex: 1; min-width: 200px; }
+  .ai-text h3 { font-size: 16px; font-weight: 700; margin-bottom: .25rem; }
+  .ai-text p { font-size: 14px; color: var(--muted); margin: 0; }
+  .ai-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--accent); color: #fff; font-family: 'Heebo', sans-serif; font-size: 14px; font-weight: 700; padding: .6rem 1.3rem; border-radius: 8px; border: none; cursor: pointer; text-decoration: none; transition: opacity .15s, transform .1s; white-space: nowrap; }
+  .ai-btn:hover { opacity: .88; transform: translateY(-1px); }
+
+  ul.styled { padding-right: 1.2rem; margin: .75rem 0 1rem; }
+  ul.styled li { color: #bfc8df; font-size: 16px; margin-bottom: .4rem; }
+  ul.styled li::marker { color: var(--accent); }
+
+  @media(max-width:540px) { .trans-row { grid-template-columns: 1fr; } .trans-arrow { transform: rotate(90deg); padding: .5rem 0; } .trans-col.human { border-left: none; border-top: 1px solid var(--border); } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="course-label">Python למתחילים</span>
+    <span class="sep">›</span>
+    <span class="lesson-label">שיעור 2 מתוך 20</span>
+  </div>
+  <div class="progress-pill">
+    <div class="progress-dot"></div>
+    שלב 0 — יסודות
+  </div>
+</div>
+
+<div class="hero">
+  <div class="lesson-num">שיעור 2</div>
+  <h1>מה זה שפת תכנות?</h1>
+  <p class="hero-sub">המחשב מבין רק אפסים ואחדות. אז איך מדברים איתו בשפת אדם?</p>
+  <div class="tags">
+    <span class="tag accent">קונצפטים</span>
+    <span class="tag">15 דקות</span>
+    <span class="tag">ללא קוד</span>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="section-label">חלק א׳ — הבעיה</div>
+  <h2>מחשבים לא מבינים עברית (ולא אנגלית)</h2>
+  <p>
+    בשיעור הקודם למדנו שמחשב מבצע הוראות. אבל יש בעיה אחת קטנה:
+    המחשב לא מבין שפת אנוש. הוא מבין רק שפת מכונה — רצפים של אפסים ואחדות.
+  </p>
+  <p>
+    לדוגמה, הפקודה "הדפס את המילה שלום" נראית כך בשפת מכונה:
+  </p>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span>שפת מכונה — מה שהמחשב באמת מבין</span></div>
+    <pre>01001000 01100101 01101100 01101100 01101111
+01010000 01110010 01101001 01101110 01110100</pre>
+  </div>
+
+  <p>ברור שאף אחד לא יכול לכתוב כך. אז המציאו פתרון.</p>
+
+  <div class="divider"></div>
+
+  <div class="section-label">חלק ב׳ — הפתרון</div>
+  <h2>שפת תכנות = מתרגם בין אדם למחשב</h2>
+  <p>
+    שפת תכנות היא שפה שנמצאת באמצע — קרובה מספיק לשפת אדם כדי שנוכל לכתוב אותה,
+    אבל מוגדרת מספיק כדי שהמחשב יוכל לתרגם אותה לאפסים ואחדות.
+  </p>
+
+  <div class="translation-box">
+    <div class="trans-header">דוגמה — איך מוסרים הוראה למחשב</div>
+    <div class="trans-row">
+      <div class="trans-col">
+        <div class="trans-label">מחשבה אנושית</div>
+        <div class="trans-text">הדפס על המסך את המשפט:<br>"שלום עולם"</div>
+      </div>
+      <div class="trans-arrow">→</div>
+      <div class="trans-col human">
+        <div class="trans-label">Python</div>
+        <div class="trans-text code">print("שלום עולם")</div>
+      </div>
+    </div>
+  </div>
+
+  <p>
+    שורת הקוד <code style="font-family:'Fira Code',monospace;color:#82aaff;font-size:14px">print("שלום עולם")</code> — זה כל מה שצריך לכתוב.
+    תוכנה שנקראת <strong style="color:var(--text)">מפרש (interpreter)</strong> מתרגמת אותה לשפת מכונה ברגע שמריצים.
+  </p>
+
+  <div class="callout">
+    <div class="callout-title">אנלוגיה</div>
+    דמיין שאתה בפריז ולא יודע צרפתית. אתה אומר למתורגמן שלך "בקש את החשבון".
+    הוא מתרגם ל-"L'addition, s'il vous plaît". שפת התכנות היא המתורגמן הזה.
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">חלק ג׳ — שפות שקיימות</div>
+  <h2>יש הרבה שפות תכנות — למה?</h2>
+  <p>
+    כמו שיש שפות אנוש שונות לצרכים שונים — יש שפות תכנות שונות לתחומים שונים.
+    הכירו כמה מהנפוצות:
+  </p>
+
+  <div class="lang-grid">
+    <div class="lang-card highlight">
+      <div class="lang-top">
+        <div class="lang-icon">🐍</div>
+        <div class="lang-name">Python</div>
+        <span class="lang-badge badge-python">← אנחנו כאן</span>
+      </div>
+      <div class="lang-desc">קלה ללמידה, קצרה, קריאה. ענקית בנתונים, AI, ואוטומציה.</div>
+      <div class="lang-used">משתמשים: <span>Google, Netflix, NASA</span></div>
+    </div>
+    <div class="lang-card">
+      <div class="lang-top">
+        <div class="lang-icon">🌐</div>
+        <div class="lang-name">JavaScript</div>
+        <span class="lang-badge badge-web">ווב</span>
+      </div>
+      <div class="lang-desc">שפת הדפדפן. כל אתר אינטרנט שמזיז משהו על המסך — זה JavaScript.</div>
+      <div class="lang-used">משתמשים: <span>כל אתר שקיים</span></div>
+    </div>
+    <div class="lang-card">
+      <div class="lang-top">
+        <div class="lang-icon">☕</div>
+        <div class="lang-name">Java</div>
+        <span class="lang-badge badge-mobile">מובייל</span>
+      </div>
+      <div class="lang-desc">חזקה ומהירה. בסיס לאפליקציות Android ומערכות ארגוניות גדולות.</div>
+      <div class="lang-used">משתמשים: <span>Android, LinkedIn, Amazon</span></div>
+    </div>
+    <div class="lang-card">
+      <div class="lang-top">
+        <div class="lang-icon">⚡</div>
+        <div class="lang-name">C / C++</div>
+        <span class="lang-badge badge-system">מערכות</span>
+      </div>
+      <div class="lang-desc">מהירה מאוד, קרובה לחומרה. משמשת למשחקים, מערכות הפעלה, מכוניות.</div>
+      <div class="lang-used">משתמשים: <span>Windows, PlayStation, Tesla</span></div>
+    </div>
+  </div>
+
+  <div class="callout success">
+    <div class="callout-title">למה Python קודם?</div>
+    Python היא הפשוטה ביותר ללמידה — הקוד שלה נקרא כמעט כמו אנגלית רגילה.
+    אחרי שתבין את הרעיונות הבסיסיים ב-Python, יהיה הרבה יותר קל ללמוד כל שפה אחרת.
+    הרעיונות זהים — רק התחביר משתנה.
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">חלק ד׳ — השוואה מהירה</div>
+  <h2>אותו רעיון, שפות שונות</h2>
+  <p>כדי להבין כמה Python פשוטה — הנה אותה פעולה בשפות שונות. כולן עושות בדיוק אותו דבר: מדפיסות "שלום עולם".</p>
+
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>שפה</th>
+        <th>הקוד</th>
+        <th>הערה</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="highlight-row">
+        <td>Python</td>
+        <td><code style="font-family:'Fira Code',monospace;font-size:13px;color:#3ecf8e">print("שלום עולם")</code></td>
+        <td>שורה אחת. ברורה. פשוטה.</td>
+      </tr>
+      <tr>
+        <td>JavaScript</td>
+        <td><code style="font-family:'Fira Code',monospace;font-size:13px;color:#bfc8df">console.log("שלום עולם")</code></td>
+        <td>שורה אחת — אבל פחות ברורה.</td>
+      </tr>
+      <tr>
+        <td>Java</td>
+        <td><code style="font-family:'Fira Code',monospace;font-size:11px;color:#bfc8df">public class Main {"{"}  public static void main(String[] args) {"{"} System.out.println("שלום"); {"}"} {"}"}</code></td>
+        <td>הרבה "רעש" לפני שמגיעים לעיקר.</td>
+      </tr>
+      <tr>
+        <td>C++</td>
+        <td><code style="font-family:'Fira Code',monospace;font-size:13px;color:#bfc8df">#include &lt;iostream&gt;<br>int main() {"{"} std::cout &lt;&lt; "שלום"; {"}"}</code></td>
+        <td>דורש ידע נוסף רק להתחיל.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="divider"></div>
+
+  <div class="section-label">חלק ה׳ — מה שחשוב לזכור</div>
+  <h2>שלושה דברים לקחת מהשיעור הזה</h2>
+
+  <ul class="styled">
+    <li>שפת תכנות היא שפת ביניים — בין שפת אדם לשפת מכונה</li>
+    <li>יש הרבה שפות — כל אחת מתאימה לתחום אחר</li>
+    <li>Python היא הכי קלה להתחלה — ולכן מתחילים איתה</li>
+  </ul>
+
+  <div class="callout warn">
+    <div class="callout-title">בשיעור הבא</div>
+    נפסיק לדבר ונתחיל לעשות. בשיעור 3 נפתח את Google Colab ונריץ את השורה הראשונה שלנו.
+    זה יותר קל ממה שנשמע — מבטיחים.
+  </div>
+
+  <!-- EXERCISE -->
+  <div class="exercise-box">
+    <div class="exercise-header">
+      <span class="exercise-badge">תרגיל</span>
+      <span class="exercise-title">בדוק את עצמך</span>
+    </div>
+    <p style="font-size:15px;color:var(--muted);margin-bottom:1rem;">לחץ על כל שאלה כדי לראות את התשובה.</p>
+
+    <div class="question" onclick="toggleAnswer(this)">
+      <div class="question-text">1. למה בני אדם לא כותבים ישירות בשפת מכונה?</div>
+      <div class="toggle-hint">לחץ לתשובה</div>
+      <div class="answer">כי שפת מכונה היא רצפים של אפסים ואחדות שאי אפשר לקרוא, לכתוב, או להבין בתור אדם. שפות תכנות נוצרו כדי לתת לנו שפה שאנחנו יכולים לכתוב, ותוכנה תתרגם אותה למכונה.</div>
+    </div>
+
+    <div class="question" onclick="toggleAnswer(this)">
+      <div class="question-text">2. מה עושה "מפרש" (interpreter)?</div>
+      <div class="toggle-hint">לחץ לתשובה</div>
+      <div class="answer">המפרש הוא תוכנה שקוראת את הקוד שכתבת (למשל ב-Python) ומתרגמת אותו לשפת מכונה שהמחשב מבין — בזמן אמת, שורה אחר שורה.</div>
+    </div>
+
+    <div class="question" onclick="toggleAnswer(this)">
+      <div class="question-text">3. אם לומדים Python היום, האם אפשר ללמוד JavaScript מחר בקלות?</div>
+      <div class="toggle-hint">לחץ לתשובה</div>
+      <div class="answer">כן! הרעיונות הבסיסיים — משתנים, תנאים, לולאות, פונקציות — קיימים בכל שפת תכנות. ברגע שמבינים אותם ב-Python, ללמוד שפה חדשה זה בעיקר ללמוד תחביר שונה, לא רעיונות חדשים לחלוטין.</div>
+    </div>
+
+    <div class="question" onclick="toggleAnswer(this)">
+      <div class="question-text">4. באיזו שפה משתמשים לבניית אתרים?</div>
+      <div class="toggle-hint">לחץ לתשובה</div>
+      <div class="answer">בעיקר JavaScript — היא שפת הדפדפן. גם HTML ו-CSS מעורבים (אבל הם לא שפות תכנות ממש). Python יכולה לשמש לחלק ה"אחורי" של האתר (server-side), אבל JavaScript שולטת בצד הנראה למשתמש.</div>
+    </div>
+  </div>
+
+  <!-- AI HELP -->
+  <div class="ai-section">
+    <div class="ai-icon">🤖</div>
+    <div class="ai-text">
+      <h3>לא הבנת משהו?</h3>
+      <p>שאל AI — הוא יסביר לך בדיוק מה שלא ברור, בשפה פשוטה.</p>
+    </div>
+    <a class="ai-btn" href="https://claude.ai/new?q=אני+לומד+תכנות+Python+ואני+בשיעור+2+על+שפות+תכנות.+יש+לי+שאלה:" target="_blank">
+      שאל AI ↗
+    </a>
+  </div>
+
+  <!-- NAV -->
+  <div class="nav-row">
+    <a class="nav-btn" href="lesson-01.html">→ שיעור קודם</a>
+    <a class="nav-btn primary" href="lesson-03.html">שיעור הבא — הכלים ←</a>
+  </div>
+
+</div>
+
+<script>
+function toggleAnswer(el) {
+  const answer = el.querySelector('.answer');
+  const hint = el.querySelector('.toggle-hint');
+  const isOpen = answer.classList.contains('show');
+  answer.classList.toggle('show', !isOpen);
+  hint.textContent = isOpen ? 'לחץ לתשובה' : 'לחץ להסתרה';
+}
+</script>
+</body>
+</html>

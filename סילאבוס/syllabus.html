@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python למתחילים — סילבוס</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f1117;
+  --surface: #181c27;
+  --surface2: #1e2333;
+  --border: #2a3045;
+  --accent: #4f8ef7;
+  --accent2: #7c5cfc;
+  --text: #e8ecf4;
+  --muted: #7a85a0;
+  --success: #3ecf8e;
+  --warn: #f7c94f;
+  --p0: #7a85a0;
+  --p1: #4f8ef7;
+  --p2: #3ecf8e;
+  --p3: #7c5cfc;
+  --p4: #f7874f;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;font-size:16px;line-height:1.7;min-height:100vh}
+
+/* NAV */
+nav{background:var(--surface);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;padding:0 2rem;position:sticky;top:0;z-index:100}
+.nav-logo{font-size:14px;font-weight:700;color:var(--text);letter-spacing:-.01em}
+.nav-logo span{color:var(--accent)}
+
+/* HERO */
+.hero{max-width:860px;margin:0 auto;padding:5rem 2rem 3rem;text-align:center}
+.hero-eyebrow{font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:1.2rem}
+.hero h1{font-size:clamp(32px,6vw,56px);font-weight:700;line-height:1.1;letter-spacing:-.03em;margin-bottom:1.2rem;background:linear-gradient(135deg,var(--text) 50%,var(--muted));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:17px;color:var(--muted);max-width:520px;margin:0 auto 2.5rem}
+.stats{display:flex;gap:1px;justify-content:center;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;max-width:480px;margin:0 auto}
+.stat{background:var(--surface);flex:1;padding:1rem .5rem;text-align:center}
+.stat-n{font-size:26px;font-weight:700;color:var(--text);line-height:1}
+.stat-l{font-size:12px;color:var(--muted);margin-top:4px}
+
+/* MAIN */
+.main{max-width:860px;margin:0 auto;padding:3rem 2rem 6rem}
+
+/* PHASE */
+.phase{margin-bottom:3rem}
+.phase-header{display:flex;align-items:center;gap:14px;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.phase-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.phase-name{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.phase-weeks{font-size:13px;color:var(--muted);margin-right:auto}
+.phase-count{font-size:12px;color:var(--muted);background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:3px 10px}
+
+/* LESSON ROW */
+.lesson{display:grid;grid-template-columns:40px 1fr auto;align-items:center;gap:14px;padding:.85rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:6px;text-decoration:none;color:inherit;transition:border-color .18s,background .18s}
+.lesson:hover{border-color:var(--accent);background:var(--surface2)}
+.lesson-num{font-size:12px;color:var(--muted);font-weight:500;font-family:'Fira Code',monospace;text-align:center}
+.lesson-body{}
+.lesson-title{font-size:15px;font-weight:500;color:var(--text);line-height:1.3}
+.lesson-sub{font-size:13px;color:var(--muted);margin-top:2px}
+.lesson-tag{font-size:11px;padding:3px 10px;border-radius:99px;font-weight:500;white-space:nowrap}
+
+/* phase color overrides */
+.phase-0 .phase-dot{background:var(--p0)}
+.phase-0 .phase-name{color:var(--p0)}
+.phase-0 .lesson:hover{border-color:var(--p0)}
+.phase-0 .lesson-tag{background:#1e2126;color:var(--p0);border:1px solid #353b4a}
+
+.phase-1 .phase-dot{background:var(--p1)}
+.phase-1 .phase-name{color:var(--p1)}
+.phase-1 .lesson:hover{border-color:var(--p1)}
+.phase-1 .lesson-tag{background:#0e1a30;color:var(--p1);border:1px solid #1e3a5f}
+
+.phase-2 .phase-dot{background:var(--p2)}
+.phase-2 .phase-name{color:var(--p2)}
+.phase-2 .lesson:hover{border-color:var(--p2)}
+.phase-2 .lesson-tag{background:#0e2018;color:var(--p2);border:1px solid #1a4030}
+
+.phase-3 .phase-dot{background:var(--p3)}
+.phase-3 .phase-name{color:var(--p3)}
+.phase-3 .lesson:hover{border-color:var(--p3)}
+.phase-3 .lesson-tag{background:#160e2a;color:var(--p3);border:1px solid #3a2060}
+
+.phase-4 .phase-dot{background:var(--p4)}
+.phase-4 .phase-name{color:var(--p4)}
+.phase-4 .lesson:hover{border-color:var(--p4)}
+.phase-4 .lesson-tag{background:#2a1608;color:var(--p4);border:1px solid #5a3018}
+
+/* locked overlay */
+.lesson.locked{opacity:.45;pointer-events:none}
+.lock-icon{font-size:14px;color:var(--muted)}
+
+/* CTA */
+.cta{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:2rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;margin-top:3rem}
+.cta-icon{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.cta-text{flex:1;min-width:200px}
+.cta-text h3{font-size:18px;font-weight:700;margin-bottom:.25rem}
+.cta-text p{font-size:14px;color:var(--muted);margin:0}
+.cta-btn{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;padding:.65rem 1.4rem;border-radius:8px;text-decoration:none;transition:opacity .15s,transform .1s;white-space:nowrap}
+.cta-btn:hover{opacity:.88;transform:translateY(-1px)}
+
+@media(max-width:540px){
+  .lesson{grid-template-columns:32px 1fr}
+  .lesson-tag{display:none}
+  .stats{flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Python<span> למתחילים</span></div>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">תוכנית לימוד מלאה</div>
+  <h1>מאפס לקוד<br>בחמישה שבועות</h1>
+  <p class="hero-sub">20 שיעורים קצרים, 15–20 דקות ביום, בעברית — עם דוגמאות, תרגילים ועזרת AI.</p>
+  <div class="stats">
+    <div class="stat"><div class="stat-n">20</div><div class="stat-l">שיעורים</div></div>
+    <div class="stat"><div class="stat-n">4</div><div class="stat-l">שלבים</div></div>
+    <div class="stat"><div class="stat-n">15′</div><div class="stat-l">ביום</div></div>
+    <div class="stat"><div class="stat-n">∞</div><div class="stat-l">סקרנות</div></div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- PHASE 0 -->
+  <div class="phase phase-0">
+    <div class="phase-header">
+      <div class="phase-dot"></div>
+      <div class="phase-name">שלב 0 — מה זה בכלל תכנות?</div>
+      <div class="phase-weeks">שבוע 1</div>
+      <div class="phase-count">3 שיעורים</div>
+    </div>
+    <a class="lesson" href="lesson-01.html">
+      <div class="lesson-num">01</div>
+      <div class="lesson-body">
+        <div class="lesson-title">מה זה מחשב ותוכנה?</div>
+        <div class="lesson-sub">מחשב = מכונה שמבצעת הוראות. תוכנה = הרשימה של ההוראות.</div>
+      </div>
+      <div class="lesson-tag">קונצפטים</div>
+    </a>
+    <a class="lesson locked" href="lesson-02.html">
+      <div class="lesson-num">02</div>
+      <div class="lesson-body">
+        <div class="lesson-title">מה זה שפת תכנות?</div>
+        <div class="lesson-sub">למה המציאו שפות? מה ההבדל בין Python, JavaScript, C?</div>
+      </div>
+      <div class="lesson-tag">קונצפטים</div>
+    </a>
+    <a class="lesson locked" href="lesson-03.html">
+      <div class="lesson-num">03</div>
+      <div class="lesson-body">
+        <div class="lesson-title">הכלים — Google Colab</div>
+        <div class="lesson-sub">פותחים את הסביבה, כותבים ומריצים את השורה הראשונה: <code>print("Hello!")</code></div>
+      </div>
+      <div class="lesson-tag">סביבה</div>
+    </a>
+  </div>
+
+  <!-- PHASE 1 -->
+  <div class="phase phase-1">
+    <div class="phase-header">
+      <div class="phase-dot"></div>
+      <div class="phase-name">שלב 1 — Python בסיסי</div>
+      <div class="phase-weeks">שבועות 2–3</div>
+      <div class="phase-count">7 שיעורים</div>
+    </div>
+    <a class="lesson locked" href="lesson-04.html">
+      <div class="lesson-num">04</div>
+      <div class="lesson-body">
+        <div class="lesson-title">משתנים ומספרים</div>
+        <div class="lesson-sub">מה זה משתנה? <code>x = 5</code>. חיבור, חיסור, כפל, חילוק.</div>
+      </div>
+      <div class="lesson-tag">Python</div>
+    </a>
+    <a class="lesson locked" href="lesson-05.html">
+      <div class="lesson-num">05</div>
+      <div class="lesson-body">
+        <div class="lesson-title">טקסט — strings</div>
+        <div class="lesson-sub"><code>name = "דוד"</code>. חיבור טקסטים, len(). ההבדל בין מספר לטקסט.</div>
+      </div>
+      <div class="lesson-tag">Python</div>
+    </a>
+    <a class="lesson locked" href="lesson-06.html">
+      <div class="lesson-num">06</div>
+      <div class="lesson-body">
+        <div class="lesson-title">קלט מהמשתמש — input()</div>
+        <div class="lesson-sub">תוכנה שמקשיבה. בניית תוכנת ברכה קטנה.</div>
+      </div>
+      <div class="lesson-tag">Python</div>
+    </a>
+    <a class="lesson locked" href="lesson-07.html">
+      <div class="lesson-num">07</div>
+      <div class="lesson-body">
+        <div class="lesson-title">תנאים — if / else</div>
+        <div class="lesson-sub">קוד שמחליט. <code>if age >= 18:</code>. תרגיל: בדיקת גיל.</div>
+      </div>
+      <div class="lesson-tag">Python</div>
+    </a>
+    <a class="lesson locked" href="lesson-08.html">
+      <div class="lesson-num">08</div>
+      <div class="lesson-body">
+        <div class="lesson-title">תנאים מורכבים — elif</div>
+        <div class="lesson-sub">שלוש אפשרויות ויותר. שימוש ב-and, or. תרגיל: ציון לאות.</div>
+      </div>
+      <div class="lesson-tag">Python</div>
+    </a>
+    <a class="lesson locked" href="lesson-09.html">
+      <div class="lesson-num">09</div>
+      <div class="lesson-body">
+        <div class="lesson-title">לולאת while</div>
+        <div class="lesson-sub">חזרה על קוד. סכנת לולאה אינסופית. תרגיל: ספירה.</div>
+      </div>
+      <div class="lesson-tag">Python</div>
+    </a>
+    <a class="lesson locked" href="lesson-10.html">
+      <div class="lesson-num">10</div>
+      <div class="lesson-body">
+        <div class="lesson-title">לולאת for</div>
+        <div class="lesson-sub"><code>for i in range(5):</code>. ההבדל בין for ל-while. תרגיל: לוח כפל.</div>
+      </div>
+      <div class="lesson-tag">Python</div>
+    </a>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase phase-2">
+    <div class="phase-header">
+      <div class="phase-dot"></div>
+      <div class="phase-name">שלב 2 — Python מתקדם</div>
+      <div class="phase-weeks">שבועות 3–4</div>
+      <div class="phase-count">6 שיעורים</div>
+    </div>
+    <a class="lesson locked" href="lesson-11.html">
+      <div class="lesson-num">11</div>
+      <div class="lesson-body">
+        <div class="lesson-title">רשימות — lists</div>
+        <div class="lesson-sub"><code>fruits = ["תפוח", "בננה"]</code>. גישה לפריט, append, len.</div>
+      </div>
+      <div class="lesson-tag">מתקדם</div>
+    </a>
+    <a class="lesson locked" href="lesson-12.html">
+      <div class="lesson-num">12</div>
+      <div class="lesson-body">
+        <div class="lesson-title">for + רשימות</div>
+        <div class="lesson-sub">לרוץ על רשימה. סינון פריטים. תרגיל: ממוצע ציונים.</div>
+      </div>
+      <div class="lesson-tag">מתקדם</div>
+    </a>
+    <a class="lesson locked" href="lesson-13.html">
+      <div class="lesson-num">13</div>
+      <div class="lesson-body">
+        <div class="lesson-title">פונקציות — def</div>
+        <div class="lesson-sub">קוד לשימוש חוזר. <code>def greet(name):</code>. return.</div>
+      </div>
+      <div class="lesson-tag">מתקדם</div>
+    </a>
+    <a class="lesson locked" href="lesson-14.html">
+      <div class="lesson-num">14</div>
+      <div class="lesson-body">
+        <div class="lesson-title">מילונים — dicts</div>
+        <div class="lesson-sub"><code>person = {"שם": "דוד", "גיל": 30}</code>. מפתח-ערך.</div>
+      </div>
+      <div class="lesson-tag">מתקדם</div>
+    </a>
+    <a class="lesson locked" href="lesson-15.html">
+      <div class="lesson-num">15</div>
+      <div class="lesson-body">
+        <div class="lesson-title">שגיאות — try / except</div>
+        <div class="lesson-sub">קוד שלא מתרסק. תרגיל: מחשבון חסין שגיאות.</div>
+      </div>
+      <div class="lesson-tag">מתקדם</div>
+    </a>
+    <a class="lesson locked" href="lesson-16.html">
+      <div class="lesson-num">16</div>
+      <div class="lesson-body">
+        <div class="lesson-title">קריאת קבצים</div>
+        <div class="lesson-sub"><code>open("file.txt")</code>. קריאה וכתיבה. תרגיל: יומן שנשמר.</div>
+      </div>
+      <div class="lesson-tag">מתקדם</div>
+    </a>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="phase phase-3">
+    <div class="phase-header">
+      <div class="phase-dot"></div>
+      <div class="phase-name">שלב 3 — פרויקט ראשון</div>
+      <div class="phase-weeks">שבוע 5</div>
+      <div class="phase-count">4 שיעורים</div>
+    </div>
+    <a class="lesson locked" href="lesson-17.html">
+      <div class="lesson-num">17</div>
+      <div class="lesson-body">
+        <div class="lesson-title">חזרה כללית</div>
+        <div class="lesson-sub">סיכום של כל מה שלמדנו. חידון קצר. מה היה קשה?</div>
+      </div>
+      <div class="lesson-tag">פרויקט</div>
+    </a>
+    <a class="lesson locked" href="lesson-18.html">
+      <div class="lesson-num">18</div>
+      <div class="lesson-body">
+        <div class="lesson-title">תכנון הפרויקט</div>
+        <div class="lesson-sub">בוחרים פרויקט: משחק ניחוש מספר. מפרקים לשלבים.</div>
+      </div>
+      <div class="lesson-tag">פרויקט</div>
+    </a>
+    <a class="lesson locked" href="lesson-19.html">
+      <div class="lesson-num">19</div>
+      <div class="lesson-body">
+        <div class="lesson-title">כתיבת הפרויקט</div>
+        <div class="lesson-sub">כותבים שלב אחר שלב, בודקים, מתקנים שגיאות.</div>
+      </div>
+      <div class="lesson-tag">פרויקט</div>
+    </a>
+    <a class="lesson locked" href="lesson-20.html">
+      <div class="lesson-num">20</div>
+      <div class="lesson-body">
+        <div class="lesson-title">סיום + מה הלאה?</div>
+        <div class="lesson-sub">מציגים את הפרויקט. Git, HTML/CSS, ניתוח נתונים — לאן ממשיכים?</div>
+      </div>
+      <div class="lesson-tag">סיום</div>
+    </a>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta">
+    <div class="cta-icon">🚀</div>
+    <div class="cta-text">
+      <h3>מוכן להתחיל?</h3>
+      <p>שיעור 1 מחכה לך. 15 דקות, ללא קוד, ללא התקנות.</p>
+    </div>
+    <a class="cta-btn" href="lesson-01.html">התחל שיעור 1 ←</a>
+  </div>
+
+</div>
+
+</body>
+</html>
