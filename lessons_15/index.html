@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>שיעור 15 — שגיאות: try / except</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f1117;--surface:#181c27;--surface2:#1e2333;--border:#2a3045;--accent:#3ecf8e;--accent2:#4f8ef7;--text:#e8ecf4;--muted:#7a85a0;--success:#3ecf8e;--warn:#f7c94f;--danger:#f07070;--code-bg:#141720}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;font-size:17px;line-height:1.8;min-height:100vh}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.course-label{font-size:12px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.sep{color:var(--border)}
+.lesson-label{font-size:14px;font-weight:500}
+.progress-pill{background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:4px 14px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.progress-dot{width:8px;height:8px;border-radius:50%;background:var(--success);box-shadow:0 0 6px var(--success)}
+.hero{padding:4rem 2rem 2rem;max-width:760px;margin:0 auto}
+.lesson-num{font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--success);margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.lesson-num::before{content:'';display:inline-block;width:24px;height:2px;background:var(--success);border-radius:2px}
+.hero h1{font-size:clamp(28px,5vw,44px);font-weight:700;line-height:1.2;letter-spacing:-.02em;margin-bottom:1rem;background:linear-gradient(135deg,var(--text) 60%,var(--muted));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:16px;color:var(--muted);margin-bottom:2rem}
+.tags{display:flex;gap:8px;flex-wrap:wrap}
+.tag{font-size:12px;padding:4px 12px;border-radius:99px;border:1px solid var(--border);color:var(--muted)}
+.tag.green{border-color:var(--success);color:var(--success)}
+.main{max-width:760px;margin:0 auto;padding:0 2rem 6rem}
+.divider{height:1px;background:var(--border);margin:2.5rem 0}
+.section-label{font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem}
+h2{font-size:22px;font-weight:700;margin-bottom:.75rem}
+p{color:#bfc8df;margin-bottom:1rem}
+.callout{background:var(--surface2);border:1px solid var(--border);border-right:3px solid var(--success);border-radius:8px;padding:1rem 1.2rem;margin:1.5rem 0;font-size:15px;color:var(--text);line-height:1.7}
+.callout.blue{border-right-color:var(--accent2)}
+.callout.warn{border-right-color:var(--warn)}
+.callout.danger{border-right-color:var(--danger)}
+.callout-title{font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4rem;color:var(--success)}
+.callout.blue .callout-title{color:var(--accent2)}
+.callout.warn .callout-title{color:var(--warn)}
+.callout.danger .callout-title{color:var(--danger)}
+.code-block{background:var(--code-bg);border:1px solid var(--border);border-radius:10px;margin:1.5rem 0;overflow:hidden}
+.code-header{background:var(--surface);border-bottom:1px solid var(--border);padding:.5rem 1rem;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot.r{background:#ff5f57}.dot.y{background:#febc2e}.dot.g{background:#28c840}
+pre{padding:1.2rem 1.4rem;font-family:'Fira Code',monospace;font-size:14px;line-height:1.8;overflow-x:auto}
+.kw{color:#c792ea}.fn{color:#82aaff}.str{color:#c3e88d}.cm{color:#546e7a;font-style:italic}.num-c{color:#f78c6c}.var{color:#e8ecf4}
+/* error types */
+.err-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:1.5rem 0}
+.err-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem;border-top:2px solid var(--danger)}
+.err-name{font-family:'Fira Code',monospace;font-size:14px;color:var(--danger);font-weight:500;margin-bottom:.3rem}
+.err-desc{font-size:13px;color:var(--muted);margin-bottom:.3rem;line-height:1.5}
+.err-ex{font-family:'Fira Code',monospace;font-size:12px;color:#f7c94f}
+/* safe calc demo */
+.calc-demo{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.calc-label{font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.75rem}
+.calc-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:.75rem}
+.calc-input{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.5rem .8rem;font-family:'Heebo',sans-serif;font-size:15px;color:var(--text);width:100px;outline:none}
+.calc-input:focus{border-color:var(--success)}
+.calc-btn{background:var(--success);color:#0a1a0a;font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;padding:.5rem 1rem;border-radius:8px;border:none;cursor:pointer}
+.calc-btn:hover{opacity:.88}
+.calc-out{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;font-family:'Fira Code',monospace;font-size:14px;min-height:40px}
+.calc-out.ok{color:var(--success)}
+.calc-out.err{color:var(--danger)}
+.exercise-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-top:2rem}
+.exercise-header{display:flex;align-items:center;gap:10px;margin-bottom:1rem}
+.exercise-badge{background:#1a2a1a;border:1px solid #2d5a2d;color:var(--success);font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:99px}
+.exercise-title{font-size:18px;font-weight:700}
+.question{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.9rem 1.1rem;margin-bottom:.75rem;cursor:pointer;transition:border-color .2s}
+.question:hover{border-color:var(--success)}
+.question-text{color:var(--text);font-weight:500;font-size:15px;margin-bottom:.25rem}
+.answer{display:none;font-size:14px;color:var(--success);margin-top:.5rem;padding-top:.5rem;border-top:1px solid var(--border);line-height:1.6}
+.answer.show{display:block}
+.toggle-hint{font-size:12px;color:var(--muted);margin-top:4px}
+.ai-section{margin-top:3rem;background:linear-gradient(135deg,#0e2018,#0f1117);border:1px solid #1a4030;border-radius:12px;padding:1.5rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+.ai-icon{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--success),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.ai-text{flex:1;min-width:200px}
+.ai-text h3{font-size:16px;font-weight:700;margin-bottom:.25rem}
+.ai-text p{font-size:14px;color:var(--muted);margin:0}
+.ai-btn{display:inline-flex;align-items:center;gap:8px;background:var(--success);color:#0a1a0a;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;padding:.6rem 1.3rem;border-radius:8px;text-decoration:none;white-space:nowrap}
+.ai-btn:hover{opacity:.88}
+.nav-row{display:flex;justify-content:space-between;margin-top:3rem;gap:12px}
+.nav-btn{display:inline-flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'Heebo',sans-serif;font-size:14px;font-weight:500;padding:.6rem 1.3rem;border-radius:8px;text-decoration:none;transition:border-color .15s}
+.nav-btn:hover{border-color:var(--success);color:var(--success)}
+.nav-btn.primary{background:var(--success);border-color:var(--success);color:#0a1a0a}
+.nav-btn.primary:hover{opacity:.88}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="course-label">Python למתחילים</span>
+    <span class="sep">›</span>
+    <span class="lesson-label">שיעור 15 מתוך 20</span>
+  </div>
+  <div class="progress-pill"><div class="progress-dot"></div>שלב 2 — Python מתקדם</div>
+</div>
+<div class="hero">
+  <div class="lesson-num">שיעור 15</div>
+  <h1>שגיאות — try / except</h1>
+  <p class="hero-sub">תוכנות אמיתיות לא נשברות. הן מטפלות בבעיות בחן — ומשיכות הלאה.</p>
+  <div class="tags">
+    <span class="tag green">שלב 2</span>
+    <span class="tag">15 דקות</span>
+    <span class="tag">קוד ב-Colab</span>
+  </div>
+</div>
+<div class="main">
+  <div class="section-label">חלק א׳ — מה זה שגיאה?</div>
+  <h2>שגיאות קורות — גם למתכנתים מנוסים</h2>
+  <p>כשמשתמש מקליד "שלום" במקום מספר, כשקובץ לא נמצא, כשמחלקים ב-0 — Python זורקת שגיאה והתוכנה נעצרת. זה לא רצוי. <code style="font-family:'Fira Code',monospace;color:#c792ea">try/except</code> מאפשר לתפוס שגיאות ולהגיב אליהן בצורה נחמדה.</p>
+
+  <div class="err-grid">
+    <div class="err-card">
+      <div class="err-name">ValueError</div>
+      <div class="err-desc">ערך לא תקין — לדוגמה int("שלום")</div>
+      <div class="err-ex">int("abc") → שגיאה</div>
+    </div>
+    <div class="err-card">
+      <div class="err-name">ZeroDivisionError</div>
+      <div class="err-desc">חילוק באפס</div>
+      <div class="err-ex">10 / 0 → שגיאה</div>
+    </div>
+    <div class="err-card">
+      <div class="err-name">KeyError</div>
+      <div class="err-desc">מפתח לא קיים במילון</div>
+      <div class="err-ex">d["xyz"] → שגיאה</div>
+    </div>
+    <div class="err-card">
+      <div class="err-name">IndexError</div>
+      <div class="err-desc">אינדקס מחוץ לתחום</div>
+      <div class="err-ex">lst[99] → שגיאה</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-label">חלק ב׳ — try / except</div>
+  <h2>תחביר — לנסות ולתפוס</h2>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span>מבנה בסיסי</span></div>
+    <pre><span class="kw">try</span>:
+    <span class="cm"># קוד שעלול לגרום שגיאה</span>
+    <span class="var">num</span> = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"הכנס מספר: "</span>))
+    <span class="fn">print</span>(<span class="num-c">100</span> / <span class="var">num</span>)
+
+<span class="kw">except</span> <span class="fn">ValueError</span>:
+    <span class="fn">print</span>(<span class="str">"זה לא מספר! נסה שוב."</span>)
+
+<span class="kw">except</span> <span class="fn">ZeroDivisionError</span>:
+    <span class="fn">print</span>(<span class="str">"אי אפשר לחלק באפס!"</span>)</pre>
+  </div>
+
+  <div class="callout blue">
+    <div class="callout-title">איך זה עובד</div>
+    Python מנסה להריץ את הקוד שב-try. אם משהו נכשל — היא קופצת ל-except המתאים ומריצה אותו. הקוד לא מתרסק — הוא ממשיך בצורה נשלטת.
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-label">חלק ג׳ — מחשבון חסין</div>
+  <h2>מחשבון שלא נשבר</h2>
+
+  <div class="calc-demo">
+    <div class="calc-label">נסה להכניס ערכים שונים — כולל טקסט ואפס</div>
+    <div class="calc-row">
+      <input class="calc-input" id="ca" placeholder="מספר א..." />
+      <span style="color:var(--muted);font-size:18px">÷</span>
+      <input class="calc-input" id="cb" placeholder="מספר ב..." />
+      <button class="calc-btn" onclick="runCalc()">חשב ▶</button>
+    </div>
+    <div class="calc-out" id="calc-out">הזן שני מספרים</div>
+  </div>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span>הקוד מאחורי המחשבון</span></div>
+    <pre><span class="kw">def</span> <span class="fn">safe_divide</span>(<span class="var">a</span>, <span class="var">b</span>):
+    <span class="kw">try</span>:
+        <span class="var">result</span> = <span class="fn">float</span>(<span class="var">a</span>) / <span class="fn">float</span>(<span class="var">b</span>)
+        <span class="kw">return</span> <span class="str">f"תוצאה: <span style='color:#f78c6c'>{result:.2f}</span>"</span>
+    <span class="kw">except</span> <span class="fn">ValueError</span>:
+        <span class="kw">return</span> <span class="str">"שגיאה: הכנס מספרים בלבד"</span>
+    <span class="kw">except</span> <span class="fn">ZeroDivisionError</span>:
+        <span class="kw">return</span> <span class="str">"שגיאה: אי אפשר לחלק באפס"</span></pre>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">except Exception — תופס הכל</div>
+    אם לא יודעים איזו שגיאה תקרה, אפשר לכתוב <code style="font-family:'Fira Code',monospace">except Exception as e:</code> — תופס כל שגיאה, ו-e מכיל את הפרטים. שימושי אבל לא מדויק — עדיף לתפוס שגיאות ספציפיות.
+  </div>
+
+  <div class="exercise-box">
+    <div class="exercise-header"><span class="exercise-badge">תרגיל</span><span class="exercise-title">בדוק את עצמך</span></div>
+    <p style="font-size:15px;color:var(--muted);margin-bottom:1rem;">לחץ על כל שאלה לתשובה.</p>
+    <div class="question" onclick="toggleAnswer(this)">
+      <div class="question-text">1. מה קורה אם הקוד שב-try לא גורם שגיאה?</div>
+      <div class="toggle-hint">לחץ לתשובה</div>
+      <div class="answer">הקוד שב-except פשוט לא רץ. Python מריצה את ה-try, הכל עובד בסדר, וממשיכה לקוד שאחרי כל ה-try/except. except רץ רק כשיש שגיאה.</div>
+    </div>
+    <div class="question" onclick="toggleAnswer(this)">
+      <div class="question-text">2. מה ההבדל בין except ValueError ל-except Exception?</div>
+      <div class="toggle-hint">לחץ לתשובה</div>
+      <div class="answer">except ValueError תופס רק שגיאות מסוג ValueError. except Exception תופס כל שגיאה אפשרית. עדיף להיות ספציפי — כך אפשר להגיב בצורה שונה לכל סוג בעיה.</div>
+    </div>
+    <div class="question" onclick="toggleAnswer(this)">
+      <div class="question-text">3. למה כדאי להשתמש ב-try/except גם בתוכניות פשוטות?</div>
+      <div class="toggle-hint">לחץ לתשובה</div>
+      <div class="answer">כי משתמשים לא תמיד עושים מה שמצפים מהם. הם מקלידים טקסט במקום מספר, לוחצים Enter בלי להזין כלום, מכניסים ערכים קיצוניים. try/except הופך תוכנה שבירה לתוכנה אמינה.</div>
+    </div>
+  </div>
+
+  <div class="ai-section">
+    <div class="ai-icon">🤖</div>
+    <div class="ai-text"><h3>לא הבנת משהו?</h3><p>שאל AI — הוא יסביר בדיוק מה שלא ברור.</p></div>
+    <a class="ai-btn" href="https://claude.ai/new?q=אני+לומד+Python+שיעור+15+על+try+except+שגיאות.+יש+לי+שאלה:" target="_blank">שאל AI ↗</a>
+  </div>
+  <div class="nav-row">
+    <a class="nav-btn" href="lesson-14.html">→ שיעור קודם</a>
+    <a class="nav-btn primary" href="lesson-16.html">שיעור הבא — קבצים ←</a>
+  </div>
+</div>
+<script>
+function toggleAnswer(el){const a=el.querySelector('.answer'),h=el.querySelector('.toggle-hint'),o=a.classList.contains('show');a.classList.toggle('show',!o);h.textContent=o?'לחץ לתשובה':'לחץ להסתרה'}
+function runCalc(){
+  const aV=document.getElementById('ca').value.trim(),bV=document.getElementById('cb').value.trim();
+  const out=document.getElementById('calc-out');
+  try{
+    const a=parseFloat(aV),b=parseFloat(bV);
+    if(isNaN(a)||isNaN(b)){throw new Error('val')}
+    if(b===0){throw new Error('zero')}
+    const r=(a/b).toFixed(2);
+    out.className='calc-out ok';out.textContent=`תוצאה: ${aV} ÷ ${bV} = ${r}`;
+  }catch(e){
+    out.className='calc-out err';
+    out.textContent=e.message==='zero'?'שגיאה: אי אפשר לחלק באפס!':'שגיאה: הכנס מספרים בלבד';
+  }
+}
+</script>
+</body>
+</html>

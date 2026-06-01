@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>שיעור 12 — for + רשימות</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f1117;--surface:#181c27;--surface2:#1e2333;--border:#2a3045;--accent:#3ecf8e;--accent2:#4f8ef7;--text:#e8ecf4;--muted:#7a85a0;--success:#3ecf8e;--warn:#f7c94f;--code-bg:#141720}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;font-size:17px;line-height:1.8;min-height:100vh}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.course-label{font-size:12px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.sep{color:var(--border)}
+.lesson-label{font-size:14px;font-weight:500}
+.progress-pill{background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:4px 14px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.progress-dot{width:8px;height:8px;border-radius:50%;background:var(--success);box-shadow:0 0 6px var(--success)}
+.hero{padding:4rem 2rem 2rem;max-width:760px;margin:0 auto}
+.lesson-num{font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--success);margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.lesson-num::before{content:'';display:inline-block;width:24px;height:2px;background:var(--success);border-radius:2px}
+.hero h1{font-size:clamp(28px,5vw,44px);font-weight:700;line-height:1.2;letter-spacing:-.02em;margin-bottom:1rem;background:linear-gradient(135deg,var(--text) 60%,var(--muted));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:16px;color:var(--muted);margin-bottom:2rem}
+.tags{display:flex;gap:8px;flex-wrap:wrap}
+.tag{font-size:12px;padding:4px 12px;border-radius:99px;border:1px solid var(--border);color:var(--muted)}
+.tag.green{border-color:var(--success);color:var(--success)}
+.main{max-width:760px;margin:0 auto;padding:0 2rem 6rem}
+.divider{height:1px;background:var(--border);margin:2.5rem 0}
+.section-label{font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem}
+h2{font-size:22px;font-weight:700;margin-bottom:.75rem}
+p{color:#bfc8df;margin-bottom:1rem}
+.callout{background:var(--surface2);border:1px solid var(--border);border-right:3px solid var(--success);border-radius:8px;padding:1rem 1.2rem;margin:1.5rem 0;font-size:15px;color:var(--text);line-height:1.7}
+.callout.blue{border-right-color:var(--accent2)}
+.callout.warn{border-right-color:var(--warn)}
+.callout-title{font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4rem;color:var(--success)}
+.callout.blue .callout-title{color:var(--accent2)}
+.callout.warn .callout-title{color:var(--warn)}
+.code-block{background:var(--code-bg);border:1px solid var(--border);border-radius:10px;margin:1.5rem 0;overflow:hidden}
+.code-header{background:var(--surface);border-bottom:1px solid var(--border);padding:.5rem 1rem;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot.r{background:#ff5f57}.dot.y{background:#febc2e}.dot.g{background:#28c840}
+pre{padding:1.2rem 1.4rem;font-family:'Fira Code',monospace;font-size:14px;line-height:1.8;overflow-x:auto}
+.kw{color:#c792ea}.fn{color:#82aaff}.str{color:#c3e88d}.cm{color:#546e7a;font-style:italic}.num-c{color:#f78c6c}.var{color:#e8ecf4}
+/* grades demo */
+.grades-demo{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
+.grades-label{font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.75rem}
+.grades-inputs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.75rem}
+.grade-chip{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:.35rem .7rem;font-family:'Fira Code',monospace;font-size:14px;color:#f7c94f;display:flex;align-items:center;gap:6px;cursor:pointer}
+.grade-chip:hover{border-color:#f07070}
+.grade-chip .rm{font-size:12px;color:var(--muted)}
+.grade-controls{display:flex;gap:8px;align-items:center;margin-bottom:.75rem;flex-wrap:wrap}
+.grade-input{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.5rem .8rem;font-family:'Heebo',sans-serif;font-size:14px;color:var(--text);width:90px;outline:none}
+.grade-input:focus{border-color:var(--success)}
+.gbtn{background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'Heebo',sans-serif;font-size:13px;font-weight:500;padding:.5rem .9rem;border-radius:8px;cursor:pointer}
+.gbtn:hover{border-color:var(--success);color:var(--success)}
+.gbtn.calc{background:#0e2018;border-color:var(--success);color:var(--success)}
+.grades-result{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:.8rem 1rem;font-family:'Fira Code',monospace;font-size:13px;color:var(--success);min-height:40px}
+.exercise-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-top:2rem}
+.exercise-header{display:flex;align-items:center;gap:10px;margin-bottom:1rem}
+.exercise-badge{background:#1a2a1a;border:1px solid #2d5a2d;color:var(--success);font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:99px}
+.exercise-title{font-size:18px;font-weight:700}
+.question{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.9rem 1.1rem;margin-bottom:.75rem;cursor:pointer;transition:border-color .2s}
+.question:hover{border-color:var(--success)}
+.question-text{color:var(--text);font-weight:500;font-size:15px;margin-bottom:.25rem}
+.answer{display:none;font-size:14px;color:var(--success);margin-top:.5rem;padding-top:.5rem;border-top:1px solid var(--border);line-height:1.6}
+.answer.show{display:block}
+.toggle-hint{font-size:12px;color:var(--muted);margin-top:4px}
+.ai-section{margin-top:3rem;background:linear-gradient(135deg,#0e2018,#0f1117);border:1px solid #1a4030;border-radius:12px;padding:1.5rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+.ai-icon{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--success),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.ai-text{flex:1;min-width:200px}
+.ai-text h3{font-size:16px;font-weight:700;margin-bottom:.25rem}
+.ai-text p{font-size:14px;color:var(--muted);margin:0}
+.ai-btn{display:inline-flex;align-items:center;gap:8px;background:var(--success);color:#0a1a0a;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;padding:.6rem 1.3rem;border-radius:8px;text-decoration:none;white-space:nowrap}
+.ai-btn:hover{opacity:.88}
+.nav-row{display:flex;justify-content:space-between;margin-top:3rem;gap:12px}
+.nav-btn{display:inline-flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'Heebo',sans-serif;font-size:14px;font-weight:500;padding:.6rem 1.3rem;border-radius:8px;text-decoration:none;transition:border-color .15s}
+.nav-btn:hover{border-color:var(--success);color:var(--success)}
+.nav-btn.primary{background:var(--success);border-color:var(--success);color:#0a1a0a}
+.nav-btn.primary:hover{opacity:.88}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-left">
+    <span class="course-label">Python למתחילים</span>
+    <span class="sep">›</span>
+    <span class="lesson-label">שיעור 12 מתוך 20</span>
+  </div>
+  <div class="progress-pill"><div class="progress-dot"></div>שלב 2 — Python מתקדם</div>
+</div>
+<div class="hero">
+  <div class="lesson-num">שיעור 12</div>
+  <h1>for + רשימות</h1>
+  <p class="hero-sub">שילוב הלולאה עם הרשימה — אחד הכלים הכי שימושיים בכל תכנות.</p>
+  <div class="tags">
+    <span class="tag green">שלב 2</span>
+    <span class="tag">15 דקות</span>
+    <span class="tag">קוד ב-Colab</span>
+  </div>
+</div>
+<div class="main">
+  <div class="section-label">חלק א׳ — לרוץ על רשימה</div>
+  <h2>for item in list — בדיוק כך</h2>
+  <p>כשמחברים for עם רשימה, הלולאה עוברת על כל פריט — אחד אחד, בסדר. זו אחת הפעולות הנפוצות ביותר ב-Python.</p>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span>מעבר על כל פריט ברשימה</span></div>
+    <pre><span class="var">fruits</span> = [<span class="str">"תפוח"</span>, <span class="str">"בננה"</span>, <span class="str">"תפוז"</span>, <span class="str">"ענב"</span>]
+
+<span class="kw">for</span> <span class="var">fruit</span> <span class="kw">in</span> <span class="var">fruits</span>:
+    <span class="fn">print</span>(<span class="str">f"אני אוהב <span style='color:#f78c6c'>{fruit}</span>"</span>)
+
+<span class="cm"># פלט:
+# אני אוהב תפוח
+# אני אוהב בננה
+# אני אוהב תפוז
+# אני אוהב ענב</span></pre>
+  </div>
+
+  <div class="callout blue">
+    <div class="callout-title">מה קורה בכל סיבוב</div>
+    בכל סיבוב, המשתנה <code style="font-family:'Fira Code',monospace">fruit</code> מקבל את הערך של הפריט הנוכחי. בסיבוב 1 הוא "תפוח", בסיבוב 2 "בננה", וכן הלאה — עד שנגמרו הפריטים.
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-label">חלק ב׳ — חישובים על רשימה</div>
+  <h2>ממוצע ציונים — תרגיל קלאסי</h2>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span>חישוב ממוצע</span></div>
+    <pre><span class="var">grades</span> = [<span class="num-c">85</span>, <span class="num-c">92</span>, <span class="num-c">78</span>, <span class="num-c">95</span>, <span class="num-c">88</span>]
+
+<span class="cm"># דרך 1 — with for loop</span>
+<span class="var">total</span> = <span class="num-c">0</span>
+<span class="kw">for</span> <span class="var">grade</span> <span class="kw">in</span> <span class="var">grades</span>:
+    <span class="var">total</span> += <span class="var">grade</span>
+<span class="var">avg</span> = <span class="var">total</span> / <span class="fn">len</span>(<span class="var">grades</span>)
+<span class="fn">print</span>(<span class="str">f"ממוצע: <span style='color:#f78c6c'>{avg}</span>"</span>)
+
+<span class="cm"># דרך 2 — קצרה יותר עם sum()</span>
+<span class="var">avg</span> = <span class="fn">sum</span>(<span class="var">grades</span>) / <span class="fn">len</span>(<span class="var">grades</span>)
+<span class="fn">print</span>(<span class="str">f"ממוצע: <span style='color:#f78c6c'>{avg}</span>"</span>)  <span class="cm"># 87.6</span></pre>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-label">חלק ג׳ — סינון פריטים</div>
+  <h2>for + if — שילוב עוצמתי</h2>
+  <p>אחד הדפוסים הנפוצים ביותר: לעבור על רשימה ולסנן רק את הפריטים שעומדים בתנאי.</p>
+
+  <div class="code-block">
+    <div class="code-header"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span>סינון — רק ציונים מעל 80</span></div>
+    <pre><span class="var">grades</span> = [<span class="num-c">72</span>, <span class="num-c">85</span>, <span class="num-c">60</span>, <span class="num-c">91</span>, <span class="num-c">78</span>, <span class="num-c">95</span>, <span class="num-c">55</span>]
+<span class="var">high_grades</span> = []
+
+<span class="kw">for</span> <span class="var">grade</span> <span class="kw">in</span> <span class="var">grades</span>:
+    <span class="kw">if</span> <span class="var">grade</span> > <span class="num-c">80</span>:
+        <span class="var">high_grades</span>.<span class="fn">append</span>(<span class="var">grade</span>)
+
+<span class="fn">print</span>(<span class="var">high_grades</span>)  <span class="cm"># [85, 91, 95]</span>
+<span class="fn">print</span>(<span class="str">f"<span style='color:#f78c6c'>{len(high_grades)}</span> תלמידים עברו 80"</span>)</pre>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-label">חלק ד׳ — נסה בעצמך</div>
+  <h2>מחשבון ציונים אינטראקטיבי</h2>
+
+  <div class="grades-demo">
+    <div class="grades-label">הוסף ציונים וחשב סטטיסטיקות</div>
+    <div class="grades-inputs" id="grades-chips"></div>
+    <div class="grade-controls">
+      <input class="grade-input" type="number" id="grade-in" placeholder="ציון..." min="0" max="100" />
+      <button class="gbtn calc" onclick="gradeAdd()">הוסף +</button>
+      <button class="gbtn" onclick="gradeCalc()">חשב ממוצע</button>
+      <button class="gbtn" onclick="gradesClear()">נקה</button>
+    </div>
+    <div class="grades-result" id="grades-result">הוסף ציונים ולחץ "חשב ממוצע"</div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">דפוס שתמיד יחזור</div>
+    רשימה ריקה → לולאת for → if בתוך הלולאה → append לרשימה חדשה. זה נקרא "filtering pattern" וזה אחד הדפוסים הנפוצים ביותר בתכנות אמיתי.
+  </div>
+
+  <div class="exercise-box">
+    <div class="exercise-header"><span class="exercise-badge">תרגיל</span><span class="exercise-title">בדוק את עצמך</span></div>
+    <p style="font-size:15px;color:var(--muted);margin-bottom:1rem;">לחץ על כל שאלה לתשובה.</p>
+    <div class="question" onclick="toggleAnswer(this)">
+      <div class="question-text">1. מה ההבדל בין for i in range(5) לבין for item in my_list?</div>
+      <div class="toggle-hint">לחץ לתשובה</div>
+      <div class="answer">range(5) יוצר מספרים (0,1,2,3,4) — i מקבל מספר בכל סיבוב. my_list עוברת על הפריטים עצמם — item מקבל את הפריט האמיתי. לרשימת פירות: for fruit in fruits נותן את שם הפרי, לא את האינדקס שלו.</div>
+    </div>
+    <div class="question" onclick="toggleAnswer(this)">
+      <div class="question-text">2. כיצד אפשר לקבל גם את האינדקס וגם את הפריט בלולאה?</div>
+      <div class="toggle-hint">לחץ לתשובה</div>
+      <div class="answer">משתמשים ב-enumerate(): for i, fruit in enumerate(fruits): — אז i הוא האינדקס (0,1,2...) ו-fruit הוא הפריט. שימושי כשצריך לדעת "הפריט ה-3 הוא..."</div>
+    </div>
+    <div class="question" onclick="toggleAnswer(this)">
+      <div class="question-text">3. כתוב קוד שמונה כמה מספרים זוגיים יש ברשימה [1,2,3,4,5,6,7,8]</div>
+      <div class="toggle-hint">לחץ לתשובה</div>
+      <div class="answer">count = 0 ← nums = [1,2,3,4,5,6,7,8] ← for n in nums: ← (4 רווחים) if n % 2 == 0: ← (8 רווחים) count += 1 ← print(count). התשובה היא 4 (המספרים 2,4,6,8). % הוא שארית — זוגי = שארית 0 בחילוק ב-2.</div>
+    </div>
+  </div>
+
+  <div class="ai-section">
+    <div class="ai-icon">🤖</div>
+    <div class="ai-text"><h3>לא הבנת משהו?</h3><p>שאל AI — הוא יסביר בדיוק מה שלא ברור.</p></div>
+    <a class="ai-btn" href="https://claude.ai/new?q=אני+לומד+Python+שיעור+12+על+for+ורשימות.+יש+לי+שאלה:" target="_blank">שאל AI ↗</a>
+  </div>
+  <div class="nav-row">
+    <a class="nav-btn" href="lesson-11.html">→ שיעור קודם</a>
+    <a class="nav-btn primary" href="lesson-13.html">שיעור הבא — פונקציות ←</a>
+  </div>
+</div>
+<script>
+function toggleAnswer(el){const a=el.querySelector('.answer'),h=el.querySelector('.toggle-hint'),o=a.classList.contains('show');a.classList.toggle('show',!o);h.textContent=o?'לחץ לתשובה':'לחץ להסתרה'}
+let gradesList=[85,92,78,95,88];
+function renderGrades(){
+  const d=document.getElementById('grades-chips');
+  d.innerHTML=gradesList.map((g,i)=>`<div class="grade-chip" onclick="gradeRemove(${i})"><span>${g}</span><span class="rm">✕</span></div>`).join('');
+}
+function gradeAdd(){const v=parseInt(document.getElementById('grade-in').value);if(isNaN(v)||v<0||v>100)return;gradesList.push(v);document.getElementById('grade-in').value='';renderGrades()}
+function gradeRemove(i){gradesList.splice(i,1);renderGrades()}
+function gradeCalc(){
+  if(!gradesList.length){document.getElementById('grades-result').textContent='אין ציונים';return}
+  const avg=(gradesList.reduce((a,b)=>a+b,0)/gradesList.length).toFixed(1);
+  const mx=Math.max(...gradesList),mn=Math.min(...gradesList);
+  const passing=gradesList.filter(g=>g>=60).length;
+  document.getElementById('grades-result').textContent=`ממוצע: ${avg} | גבוה: ${mx} | נמוך: ${mn} | עברו (≥60): ${passing}/${gradesList.length}`;
+}
+function gradesClear(){gradesList=[];renderGrades();document.getElementById('grades-result').textContent='הוסף ציונים ולחץ "חשב ממוצע"'}
+renderGrades();
+</script>
+</body>
+</html>
